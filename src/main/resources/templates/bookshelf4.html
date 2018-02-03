@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header2 :: common-header" />
+
+<body>
+	<div th:replace="common/header2 :: navbar" />
+
+	<div class="container">
+		<div class="row" style="margin-bottom: -100px;">
+			<div class="col-xs-8">
+				<h2 class="section-headline">
+					<h2 class="section-headline">
+						best products in the city
+					</h2>
+				</h2>
+			</div>
+			<div class="col-xs-4">
+				<img src="/image/appl.png" class="img-responsive" />
+			</div>
+		</div>
+		<hr
+			style="position: absolute; width: 100%; height: 6px; background-color: #333; z-index: -1; margin-top: -80px;" />
+		<img class="img-responsive" src="/image/wood.png"
+			style="margin-top: -75px;" />
+
+		<div class="row" style="margin-top: 60px;">
+			<div class="col-xs-3">
+				<h3><label for="category">Category</label></h3>
+				<div class="list-group" id="category">
+					<a th:href="@{/bookshelf(category='all')}" th:classappend="${activeAll}? 'active'" class="list-group-item">All</a>
+					<a th:href="@{/searchByCategory(category='Management')}" th:classappend="${activeManagement}? 'active'" class="list-group-item">category1</a>
+					<a th:href="@{/searchByCategory(category='Fiction')}" th:classappend="${activeFiction}? 'active'" class="list-group-item">category2</a>
+					<a th:href="@{/searchByCategory(category='Engineering')}" th:classappend="${activeEngineering}? 'active'" class="list-group-item">category3</a>
+					<a th:href="@{/searchByCategory(category='Programming')}" th:classappend="${activeProgramming}? 'active'" class="list-group-item">category4</a>
+					<a th:href="@{/searchByCategory(category='Arts &amp; Literature')}" th:classappend="${activeArtsLiterature}? 'active'" class="list-group-item">category5</a>
+				</div>
+			</div>
+			
+			
+
+<div class="container">
+		<div class="table-responsive">
+			<table id="bookListTable" class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th><input th:id="selectAllBooks" type="checkbox" /></th>
+						<th>Product Name</th>
+						<th>Supplier</th>
+						<th>Qty</th>
+						<th>Stock</th>
+						<th>Category</th>
+						<th>Price</th>
+						<th>Checkbox On Sale</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr class="book-item" data-th-each="book : ${bookList}" >
+						<td>
+						<input hidden="hidden" name="id" th:value="${book.id}" />
+						<input th:id="'selected'+${book.id}" class="checkboxBook" type="checkbox" />
+						</td>
+						<td>
+<a th:href="@{/bookDetail?id=}+${book.id}"><img 
+												class="img-responsive shelf-book"
+												th:src="#{adminPath}+@{/image/book/}+${book.id}+'.png'" /></a>
+									
+</td>
+						<td th:text="${book.author}"></td>
+						<td th:text="${book.category}"></td>
+						<td th:text="${book.listPrice}"></td>
+						<td th:text="${book.ourPrice}"></td>
+						<td th:text="${book.active}"></td>
+							<td th:text="${book.active}"></td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+					
+			
+		</div>
+	</div>
+	<!-- end of container -->
+<div th:replace="common/header2 :: footer"/>
+
+	<div th:replace="common/header2 :: body-bottom-scripts" />
+	
+	<script>
+		$(document).ready(function() {
+			$('#bookList').DataTable({
+				"lengthMenu":[[5,10,15,20,-1],[5,10,15,20,"All"]],
+				"ordering":false,
+				stateSave:true
+			});
+			
+			$("#bookList").on('page.dt', function() {
+				$('html, body').animate({
+					scrollTop: $('#bookList').offset().top
+				}, 200);
+			});
+		});
+	</script>
+</body>
+</html>
