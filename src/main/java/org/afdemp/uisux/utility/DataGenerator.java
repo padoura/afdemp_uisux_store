@@ -18,6 +18,7 @@ import org.afdemp.uisux.domain.User;
 import org.afdemp.uisux.domain.ClientOrder;
 import org.afdemp.uisux.domain.security.Role;
 import org.afdemp.uisux.domain.security.UserRole;
+import org.afdemp.uisux.repository.ClientOrderRepository;
 import org.afdemp.uisux.repository.ProductRepository;
 import org.afdemp.uisux.repository.RoleRepository;
 import org.afdemp.uisux.repository.UserRepository;
@@ -29,6 +30,7 @@ import org.afdemp.uisux.service.ProductService;
 import org.afdemp.uisux.service.ShoppingCartService;
 import org.afdemp.uisux.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -65,6 +67,9 @@ public class DataGenerator {
 	
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private ClientOrderRepository clientOrderRepository;
 
 	
 	
@@ -145,17 +150,28 @@ public class DataGenerator {
 		
 		
 		
-		insertCartItem(userRole.getShoppingCart(), product, 10);
+		insertCartItem(userRole.getShoppingCart(), product, 5);
 		
 		concludeSale(userRole.getShoppingCart());
 		
+		ClientOrder clientOrder=new ClientOrder();
+		clientOrder.setId(1L);
+		clientOrderService.updateOrderStatusToShipped(clientOrder);
+		
+		clientOrderService.updateOrderStatusToDelivered(clientOrder);
+		
+		clientOrderService.updateShippingMethod(clientOrder, "Courier");
+		clientOrderService.updateShippingDate(clientOrder, Date.valueOf(LocalDate.now().plusDays(5)));
 		
 		
 		
 		
 		
-		Timestamp from=new Timestamp(1517349600000L);
-		Timestamp to=new Timestamp(1517400420000L);
+		
+		Timestamp from=Timestamp.valueOf(
+				LocalDate.now().minusWeeks(1).atStartOfDay());
+		Timestamp to=Timestamp.valueOf(
+				LocalDate.now().atTime(23, 59, 59));
 		
 		List<ClientOrder> orders=clientOrderService.fetchOrdersByPeriod(from, to);
 		
@@ -177,9 +193,19 @@ public class DataGenerator {
 	
 	private boolean concludeSale(ShoppingCart shoppingCart)
 	{
-		if(cartItemService.commitSale(shoppingCart)!=null)
+		HashSet<Product> itemsReturned=new HashSet<Product>();
+		itemsReturned=cartItemService.commitSale(shoppingCart);
+		System.out.println("\n\n");
+		for(Product p:itemsReturned)
 		{
-			System.out.println("\n\nClient Order successfully placed!");
+			System.out.println(p.getName());
+		}
+		System.out.println("\n\n");
+		
+		
+		if(itemsReturned.isEmpty())
+		{
+			System.out.println("\n\nClient Order successfully placed!\n\n");
 			return true;
 		}
 		return false;
