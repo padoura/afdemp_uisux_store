@@ -1,5 +1,6 @@
 package org.afdemp.uisux.domain;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.OneToOne;
 
 import org.afdemp.uisux.domain.security.UserRole;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Entity
@@ -22,16 +25,18 @@ public class Account {
 	private Long id;
 	
 	@OneToMany(mappedBy="withdrawAccount", fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<Transaction> withdrawList;
 	
 	@OneToMany(mappedBy="depositAccount", fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<Transaction> depositList;
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_role_id")
 	private UserRole userRole;
 	
-	private double balance;
+	private BigDecimal balance;
 
 	public UserRole getUserRole() {
 		return userRole;
@@ -65,11 +70,11 @@ public class Account {
 		this.depositList = depositList;
 	}
 
-	public double getBalance() {
+	public BigDecimal getBalance() {
 		return balance;
 	}
 
-	public void setBalance(double balance) {
+	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
 	

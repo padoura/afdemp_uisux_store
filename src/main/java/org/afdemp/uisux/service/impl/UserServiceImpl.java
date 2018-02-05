@@ -105,7 +105,9 @@ public class UserServiceImpl implements UserService {
 				role=roleRepository.findByName(roleName);
 				
 				//Creating  a UserRole object
-				UserRole roleToAdd = new UserRole(existingUser, role);
+				UserRole roleToAdd = new UserRole();
+				roleToAdd.setUser(existingUser);
+				roleToAdd.setRole(role);
 				
 				userRoleService.createUserRole(roleToAdd);
 				existingUser.getUserRoles().add(roleToAdd);
@@ -169,6 +171,11 @@ public class UserServiceImpl implements UserService {
 	public User findOne(Long id) {
 		// TODO Auto-generated method stub
 		return userRepository.findOne(id);
+	}
+	
+	@Override
+	public PasswordResetToken getPasswordResetToken(final String token) {
+		return passwordResetTokenRepository.findByToken(token);
 	}
 
 }

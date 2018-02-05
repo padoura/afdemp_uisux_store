@@ -12,13 +12,14 @@ import org.afdemp.uisux.repository.MemberCartItemRepository;
 import org.afdemp.uisux.service.ClientOrderService;
 import org.afdemp.uisux.service.MemberCartItemService;
 import org.afdemp.uisux.service.MemberSaleService;
+import org.afdemp.uisux.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MemberCartItemImpl implements MemberCartItemService{
+public class MemberCartItemServiceImpl implements MemberCartItemService{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ClientOrderService.class);
 	
@@ -27,6 +28,9 @@ public class MemberCartItemImpl implements MemberCartItemService{
 	
 	@Autowired 
 	private MemberSaleService memberSaleService;
+	
+	@Autowired
+	private ProductService productService;
 	
 	@Override
 	public MemberCartItem findById(Long memberCartItemId) {
@@ -76,6 +80,7 @@ public class MemberCartItemImpl implements MemberCartItemService{
 		
 		if(memberCartItemRepository.fullPurchase(memberCartItem.getProduct(),memberCartItem.getShoppingCart(),abstractSale)>0)
 		{
+			productService.restock(memberCartItem.getProduct().getId(), memberCartItem.getQty());
 			LOG.info("\n\n\nSUCCESS: Purchase successful\n\n");
 			return true;
 		}
@@ -88,20 +93,27 @@ public class MemberCartItemImpl implements MemberCartItemService{
 
 		if(memberCartItemRepository.partialPurchase(memberCartItem.getProduct(), qty, memberCartItem.getShoppingCart())>0)
 		{
-		MemberSale memberSale=new MemberSale();
-		memberSale.setUserRole(memberCartItem.getShoppingCart().getUserRole());
-		memberSale.setSubmittedDate(new Date());
-		AbstractSale abstractSale=memberSaleService.createMemberSale(memberSale);
-		
-		MemberCartItem soldCartItem=new MemberCartItem();
-		soldCartItem.setAbstractSale(abstractSale);
-		soldCartItem.setCurrentPurchasePrice(memberCartItem.getCurrentPurchasePrice());
-		soldCartItem.setProduct(memberCartItem.getProduct());
-		soldCartItem.setQty(qty);
-		soldCartItem.setVisible(true);
-		memberCartItemRepository.save(soldCartItem);
-		LOG.info("\n\n\nSUCCESS: Purchase of {} successful\n\n",qty);
-		return true;
+			MemberSale memberSale=new MemberSale();
+			memberSale.setUserRole(memberCartItem.getShoppingCart().getUserRole());
+			memberSale.setSubmittedDate(new Date());
+			AbstractSale abstractSale=memberSaleService.createMemberSale(memberSale);
+			
+			MemberCartItem soldCartItem=new MemberCartItem();
+			soldCartItem.setAbstractSale(abstractSale);
+			soldCartItem.setCurrentPurchasePrice(memberCartItem.getCurrentPurchasePrice());
+			soldCartItem.setProduct(memberCartItem.getProduct());
+			soldCartItem.setQty(qty);
+			soldCartItem.setVisible(false);
+			soldCartItem=memberCartItemRepository.save(soldCartItem);
+			
+			if(soldCartItem!=null)
+			{
+				productService.restock(soldCartItem.getProduct().getId(), soldCartItem.getQty());
+				LOG.info("\n\n\nSUCCESS: Purchase of {} successful\n\n",qty);
+				return true;
+			}
+			
+			
 		}
 		return false;
 	}
@@ -109,7 +121,7 @@ public class MemberCartItemImpl implements MemberCartItemService{
 	@Override
 	public List<MemberCartItem> findAllAvailableItems(Long productId) {
 		
-		return memberCartItemRepository.findByProductAndIsVisibleTrue(productId);
+		return memberCartItemRepository.findByProductIdAndIsVisibleTrue(productId);
 	}
 
 	@Override
@@ -130,10 +142,51 @@ public class MemberCartItemImpl implements MemberCartItemService{
 			return false;
 		}
 		
-		
 	}
 	
+	@Override
+    public void deactivate(Long id) {
+        MemberCartItem memberCartItem = memberCartItemRepository.findOne(id);
+        memberCartItem.setVisible(false);
+        memberCartItemRepository.save(memberCartItem);
+    }
+
+    @Override
+    public void activate(Long id) {
+    	MemberCartItem memberCartItem = memberCartItemRepository.findOne(id);
+        memberCartItem.setVisible(true);
+        memberCartItemRepository.save(memberCartItem);
+    }
+
+	@Override
+	public List<MemberCartItem> findAll() {
+		return (List<MemberCartItem>) memberCartItemRepository.findAll();
+	}
 	
+    
+    @Override
+	public boolean removeMemberCartItem(Long id,Long shoppingCartId)
+	{
+		if(memberCartItemRepository.deleteByIdAndShoppingCartId(id,shoppingCartId)>0)
+		{
+			LOG.info("\n\nSUCCESS: Removed memberCartItem {} from shoppingCart\n",id);
+			return true;
+		}
+		LOG.info("\n\nFAILURE: Removing memberCartItem {} failed miserably.",id);
+		return false;
+	}
+	
+	@Override
+	public boolean emptyMemberCart(Long shoppingCartId)
+	{
+		if(memberCartItemRepository.deleteByShoppingCartId(shoppingCartId)>0)
+		{
+			LOG.info("\n\nSUCCESS: MemberShoppingCart cleared.");
+			return true;
+		}
+		LOG.info("\n\nFAILURE: Emptying the MemberShoppingCart {} failed miserably.");
+		return false;
+	}
 	
 	
 

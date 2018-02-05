@@ -6,7 +6,9 @@ import org.afdemp.uisux.service.AddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AddressServiceImpl implements AddressService{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AddressService.class);
@@ -23,11 +25,10 @@ public class AddressServiceImpl implements AddressService{
 		}
 		else
 		{
-//			TODO correct NullPointerException
-			Address tempAddress = new Address();
-			tempAddress=addressRepository.findByReceiverNameAndStreet1AndCityAndZipcode(address.getReceiverName(), address.getStreet1(), address.getCity(), address.getZipcode());
+			Address tempAddress=addressRepository.findByReceiverNameAndStreet1AndCityAndZipcode(address.getReceiverName(), address.getStreet1(), address.getCity(), address.getZipcode());
 			if(tempAddress==null) 
 			{
+				tempAddress = new Address();
 				tempAddress.setReceiverName(tempAddress.getReceiverName());
 				tempAddress.setStreet1(tempAddress.getStreet1());
 				tempAddress.setStreet2(tempAddress.getStreet2());
