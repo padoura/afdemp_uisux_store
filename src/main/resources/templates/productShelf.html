@@ -34,7 +34,7 @@
 				</div> -->
 				<a th:href="@{/products/productShelf}"  class="list-group-item">All</a>
 				<a th:each="prod : ${categoryList}" th:href="@{/searchByCategory(category= ${prod.id})}"  th:text="${prod.type}"
-									th:classappend="${prod.type}? 'active'" class="list-group-item"></a>
+									th:classappend="${prod.type}" class="list-group-item"></a>
 				
 				</div>
 				
