@@ -5,6 +5,8 @@ import org.afdemp.uisux.domain.CreditCard;
 public interface CreditCardService {
 	
 	CreditCard createCreditCard(CreditCard creditCard);
+
+	CreditCard findById(Long creditCardId);
 	
 	
 	

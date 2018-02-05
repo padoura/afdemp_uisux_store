@@ -47,4 +47,9 @@ public class AddressServiceImpl implements AddressService{
 		
 	}
 
+	@Override
+	public Address findById(Long shippingAddressId) {
+		return addressRepository.findOne(shippingAddressId);
+	}
+
 }

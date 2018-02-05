@@ -5,6 +5,8 @@ import org.afdemp.uisux.domain.Address;
 public interface AddressService {
 	
 	Address createAddress(Address address);
+
+	Address findById(Long shippingAddressId);
 	
 
 }

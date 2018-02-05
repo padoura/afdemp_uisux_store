@@ -25,4 +25,9 @@ public class CreditCardServiceImpl implements CreditCardService {
 		return tempCard;
 	}
 
+	@Override
+	public CreditCard findById(Long creditCardId) {
+		return creditCardRepository.findOne(creditCardId);
+	}
+
 }

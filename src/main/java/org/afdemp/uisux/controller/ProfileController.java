@@ -15,7 +15,9 @@ import org.afdemp.uisux.domain.Address;
 import org.afdemp.uisux.domain.Category;
 import org.afdemp.uisux.domain.CreditCard;
 import org.afdemp.uisux.domain.Product;
+import org.afdemp.uisux.service.AddressService;
 import org.afdemp.uisux.service.CategoryService;
+import org.afdemp.uisux.service.CreditCardService;
 import org.afdemp.uisux.service.ProductService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
@@ -59,6 +61,12 @@ public class ProfileController {
 
 	@Autowired
 	private UserRoleService userRoleService;
+
+	@Autowired
+	private CreditCardService creditCardService;
+
+	@Autowired
+	private AddressService addressService;
 	
 	@RequestMapping("/myProfile")
 	public String myProfile(Model model, Principal principal) {
@@ -170,6 +178,36 @@ public class ProfileController {
 		return "myProfile";
 	}
 	
+	
+	@RequestMapping("/updateCreditCard")
+	public String updateCreditCard(
+			@ModelAttribute("id") Long creditCardId, Principal principal, Model model
+			) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		CreditCard creditCard = creditCardService.findById(creditCardId);
+		
+		if(userRole.getUserRoleId() != creditCard.getUserRole().getUserRoleId()) {
+			return "badRequestPage";
+		} else {
+			model.addAttribute("user", user);
+			Address billingAddress = creditCard.getBillingAddress();
+			model.addAttribute("creditCard", creditCard);
+			model.addAttribute("billingAddress", billingAddress);
+			
+			model.addAttribute("addNewCreditCard", true);
+			model.addAttribute("classActiveBilling", true);
+			model.addAttribute("listOfShippingAddresses", true);
+			
+			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+			model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+			
+			return "myProfile";
+		}
+	}
+	
 	@RequestMapping("/addNewShippingAddress")
 	public String addNewShippingAddress(
 			Model model, Principal principal
@@ -214,6 +252,34 @@ public class ProfileController {
 		return "myProfile";
 	}
 	
+	@RequestMapping("/updateShippingAddress")
+	public String updateShippingAddress(
+			@ModelAttribute("id") Long shippingAddressId, Principal principal, Model model
+			) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		Address shippingAddress = addressService.findById(shippingAddressId);
+		
+		if(userRole.getUserRoleId() != shippingAddress.getUserRole().getUserRoleId()) {
+			return "badRequestPage";
+		} else {
+			model.addAttribute("user", user);
+			model.addAttribute("shippingAddress", shippingAddress);
+			
+			model.addAttribute("addNewShippingAddress", true);
+			model.addAttribute("classActiveShipping", true);
+			model.addAttribute("listOfCreditCards", true);
+			
+			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+			model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+			
+			return "myProfile";
+		}
+	}
+
+	
 }
 
 
@@ -229,66 +295,9 @@ public class ProfileController {
 
 //	
 //	
-//	@RequestMapping("/updateCreditCard")
-//	public String updateCreditCard(
-//			@ModelAttribute("id") Long creditCardId, Principal principal, Model model
-//			) {
-//		User user = userService.findByUsername(principal.getName());
-//		UserPayment userPayment = userPaymentService.findById(creditCardId);
-//		
-//		if(user.getId() != userPayment.getUser().getId()) {
-//			return "badRequestPage";
-//		} else {
-//			model.addAttribute("user", user);
-//			UserBilling userBilling = userPayment.getUserBilling();
-//			model.addAttribute("userPayment", userPayment);
-//			model.addAttribute("userBilling", userBilling);
-//			
-//			List<String> stateList = USConstants.listOfUSStatesCode;
-//			Collections.sort(stateList);
-//			model.addAttribute("stateList", stateList);
-//			
-//			model.addAttribute("addNewCreditCard", true);
-//			model.addAttribute("classActiveBilling", true);
-//			model.addAttribute("listOfShippingAddresses", true);
-//			
-//			model.addAttribute("userPaymentList", user.getUserPaymentList());
-//			model.addAttribute("userShippingList", user.getUserShippingList());
-//			model.addAttribute("orderList", user.getOrderList());
-//			
-//			return "myProfile";
-//		}
-//	}
+
 //	
-//	@RequestMapping("/updateUserShipping")
-//	public String updateUserShipping(
-//			@ModelAttribute("id") Long shippingAddressId, Principal principal, Model model
-//			) {
-//		User user = userService.findByUsername(principal.getName());
-//		UserShipping userShipping = userShippingService.findById(shippingAddressId);
-//		
-//		if(user.getId() != userShipping.getUser().getId()) {
-//			return "badRequestPage";
-//		} else {
-//			model.addAttribute("user", user);
-//			
-//			model.addAttribute("userShipping", userShipping);
-//			
-//			List<String> stateList = USConstants.listOfUSStatesCode;
-//			Collections.sort(stateList);
-//			model.addAttribute("stateList", stateList);
-//			
-//			model.addAttribute("addNewShippingAddress", true);
-//			model.addAttribute("classActiveShipping", true);
-//			model.addAttribute("listOfCreditCards", true);
-//			
-//			model.addAttribute("userPaymentList", user.getUserPaymentList());
-//			model.addAttribute("userShippingList", user.getUserShippingList());
-//			model.addAttribute("orderList", user.getOrderList());
-//			
-//			return "myProfile";
-//		}
-//	}
+
 //	
 //	@RequestMapping(value="/setDefaultPayment", method=RequestMethod.POST)
 //	public String setDefaultPayment(
@@ -378,59 +387,6 @@ public class ProfileController {
 //		}
 //	}
 //	
-//	@RequestMapping(value="/newUser", method = RequestMethod.POST)
-//	public String newUserPost(
-//			HttpServletRequest request,
-//			@ModelAttribute("email") String userEmail,
-//			@ModelAttribute("username") String username,
-//			Model model
-//			) throws Exception{
-//		model.addAttribute("classActiveNewAccount", true);
-//		model.addAttribute("email", userEmail);
-//		model.addAttribute("username", username);
-//		
-//		if (userService.findByUsername(username) != null) {
-//			model.addAttribute("usernameExists", true);
-//			
-//			return "myAccount";
-//		}
-//		
-//		if (userService.findByEmail(userEmail) != null) {
-//			model.addAttribute("emailExists", true);
-//			
-//			return "myAccount";
-//		}
-//		
-//		User user = new User();
-//		user.setUsername(username);
-//		user.setEmail(userEmail);
-//		
-//		String password = SecurityUtility.randomPassword();
-//		
-//		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
-//		user.setPassword(encryptedPassword);
-//		
-//		Role role = new Role();
-//		role.setRoleId(1);
-//		role.setName("ROLE_USER");
-//		Set<UserRole> userRoles = new HashSet<>();
-//		userRoles.add(new UserRole(user, role));
-//		userService.createUser(user, userRoles);
-//		
-//		String token = UUID.randomUUID().toString();
-//		userService.createPasswordResetTokenForUser(user, token);
-//		
-//		String appUrl = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
-//		
-//		SimpleMailMessage email = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
-//		
-//		mailSender.send(email);
-//		
-//		model.addAttribute("emailSent", "true");
-//		model.addAttribute("orderList", user.getOrderList());
-//		
-//		return "myAccount";
-//	}
 //	
 //
 
