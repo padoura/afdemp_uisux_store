@@ -156,7 +156,6 @@ public class ProfileController {
 			){
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
-		model.addAttribute("user", user);
 		
 		userRoleService.updateBillingAddress(billingAddress, creditCard, userRole);
 		
@@ -171,31 +170,49 @@ public class ProfileController {
 		return "myProfile";
 	}
 	
-//	@RequestMapping("/addNewShippingAddress")
-//	public String addNewShippingAddress(
-//			Model model, Principal principal
-//			){
-//		User user = userService.findByUsername(principal.getName());
-//		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
-//		model.addAttribute("user", user);
-//		
-//		model.addAttribute("addNewShippingAddress", true);
-//		model.addAttribute("classActiveShipping", true);
-//		model.addAttribute("listOfCreditCards", true);
-//		
-//		UserShipping userShipping = new UserShipping();
-//		
-//		model.addAttribute("userShipping", userShipping);
-//		
-////		List<String> stateList = USConstants.listOfUSStatesCode;
-////		Collections.sort(stateList);
-////		model.addAttribute("stateList", stateList);
-//		model.addAttribute("userPaymentList", user.getUserPaymentList());
-//		model.addAttribute("userShippingList", user.getUserShippingList());
-//		model.addAttribute("orderList", user.getOrderList());
-//		
-//		return "myProfile";
-//	}
+	@RequestMapping("/addNewShippingAddress")
+	public String addNewShippingAddress(
+			Model model, Principal principal
+			){
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		model.addAttribute("user", user);
+		
+		model.addAttribute("addNewShippingAddress", true);
+		model.addAttribute("classActiveShipping", true);
+		model.addAttribute("listOfCreditCards", true);
+		
+		Address shippingAddress = new Address();
+		
+		model.addAttribute("shippingAddress", shippingAddress);
+		
+		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+		
+		return "myProfile";
+	}
+	
+	@RequestMapping(value="/addNewShippingAddress", method=RequestMethod.POST)
+	public String addNewShippingAddressPost(
+			@ModelAttribute("shippingAddress") Address shippingAddress,
+			Principal principal, Model model
+			){
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		userRoleService.updateShippingAddress(shippingAddress, userRole);
+		
+		model.addAttribute("user", user);
+		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+		model.addAttribute("listOfShippingAddresses", true);
+		model.addAttribute("classActiveShipping", true);
+		model.addAttribute("listOfCreditCards", true);
+		
+		return "myProfile";
+	}
 	
 }
 
@@ -209,24 +226,7 @@ public class ProfileController {
 
 //	
 //	
-//	@RequestMapping(value="/addNewShippingAddress", method=RequestMethod.POST)
-//	public String addNewShippingAddressPost(
-//			@ModelAttribute("userShipping") UserShipping userShipping,
-//			Principal principal, Model model
-//			){
-//		User user = userService.findByUsername(principal.getName());
-//		userService.updateUserShipping(userShipping, user);
-//		
-//		model.addAttribute("user", user);
-//		model.addAttribute("userPaymentList", user.getUserPaymentList());
-//		model.addAttribute("userShippingList", user.getUserShippingList());
-//		model.addAttribute("listOfShippingAddresses", true);
-//		model.addAttribute("classActiveShipping", true);
-//		model.addAttribute("listOfCreditCards", true);
-//		model.addAttribute("orderList", user.getOrderList());
-//		
-//		return "myProfile";
-//	}
+
 //	
 //	
 //	@RequestMapping("/updateCreditCard")

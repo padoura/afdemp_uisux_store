@@ -18,5 +18,7 @@ public interface UserRoleService {
 	UserRole findByUserAndRole(User user, String roleType);
 
 	void updateBillingAddress(Address billingAddress, CreditCard creditCard, UserRole userRole);
+
+	void updateShippingAddress(Address shippingAddress, UserRole userRole);
 	
 }

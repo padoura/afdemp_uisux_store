@@ -130,4 +130,13 @@ public class UserRoleServiceImpl implements UserRoleService{
 	}
 
 
+	@Override
+	public void updateShippingAddress(Address shippingAddress, UserRole userRole) {
+		shippingAddress.setUserRole(userRole);
+		shippingAddress.setUserShippingDefault(true);
+		userRole.getUserShippingAddressList().add(shippingAddress);
+		userRoleRepository.save(userRole);
+	}
+
+
 }
