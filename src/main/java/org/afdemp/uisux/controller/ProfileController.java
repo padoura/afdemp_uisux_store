@@ -278,6 +278,31 @@ public class ProfileController {
 			return "myProfile";
 		}
 	}
+	
+	@RequestMapping(value="/setDefaultCreditCard", method=RequestMethod.POST)
+	public String setDefaultCreditCard(
+			@ModelAttribute("defaultCreditCardId") Long defaultCreditCardId, Principal principal, Model model
+			) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		creditCardService.setDefaultCreditCard(defaultCreditCardId, userRole);
+		
+		
+		
+		model.addAttribute("user", user);
+		model.addAttribute("listOfCreditCards", true);
+		model.addAttribute("classActiveBilling", true);
+		model.addAttribute("listOfShippingAddresses", true);
+		
+		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+		
+		return "myProfile";
+	}
+	
+	
 
 	
 }
@@ -299,24 +324,7 @@ public class ProfileController {
 //	
 
 //	
-//	@RequestMapping(value="/setDefaultPayment", method=RequestMethod.POST)
-//	public String setDefaultPayment(
-//			@ModelAttribute("defaultUserPaymentId") Long defaultPaymentId, Principal principal, Model model
-//			) {
-//		User user = userService.findByUsername(principal.getName());
-//		userService.setUserDefaultPayment(defaultPaymentId, user);
-//		
-//		model.addAttribute("user", user);
-//		model.addAttribute("listOfCreditCards", true);
-//		model.addAttribute("classActiveBilling", true);
-//		model.addAttribute("listOfShippingAddresses", true);
-//		
-//		model.addAttribute("userPaymentList", user.getUserPaymentList());
-//		model.addAttribute("userShippingList", user.getUserShippingList());
-//		model.addAttribute("orderList", user.getOrderList());
-//		
-//		return "myProfile";
-//	}
+
 //	
 //	@RequestMapping(value="/setDefaultShippingAddress", method=RequestMethod.POST)
 //	public String setDefaultShippingAddress(
