@@ -9,9 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.afdemp.uisux.domain.Category;
 import org.afdemp.uisux.domain.Product;
 import org.afdemp.uisux.domain.User;
+import org.afdemp.uisux.service.CategoryService;
 import org.afdemp.uisux.service.ProductService;
 import org.afdemp.uisux.service.UserService;
 
@@ -23,9 +24,12 @@ public class SearchController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private CategoryService categoryService;
+
 	@RequestMapping("/searchByCategory")
 	public String searchByCategory(
-			@RequestParam("category") String category,
+			@RequestParam("category") Long categoryId,
 			Model model, Principal principal
 			){
 		if(principal!=null) {
@@ -34,7 +38,13 @@ public class SearchController {
 			model.addAttribute("user", user);
 		}
 		
-		String classActiveCategory = "active"+category;
+		List<Category> categoryList = categoryService.findAll();
+		model.addAttribute("categoryList", categoryList);
+		
+		Category category = categoryService.findOne(categoryId);
+		
+		
+		String classActiveCategory = "active"+category.getType();
 		classActiveCategory = classActiveCategory.replaceAll("\\s+", "");
 		classActiveCategory = classActiveCategory.replaceAll("&", "");
 		model.addAttribute(classActiveCategory, true);
@@ -61,6 +71,9 @@ public class SearchController {
 			User user = userService.findByUsername(username);
 			model.addAttribute("user", user);
 		}
+		
+		List<Category> categoryList = categoryService.findAll();
+		model.addAttribute("categoryList", categoryList);
 		
 		List<Product> productList = productService.search(keyword);
 		
