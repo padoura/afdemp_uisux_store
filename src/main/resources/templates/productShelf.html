@@ -32,7 +32,7 @@
 					<a th:href="@{/searchByCategory(category='Programming')}" th:classappend="${activeProgramming}? 'active'" class="list-group-item">category4</a>
 					<a th:href="@{/searchByCategory(category='Arts &amp; Literature')}" th:classappend="${activeArtsLiterature}? 'active'" class="list-group-item">category5</a>
 				</div> -->
-				<a th:href="@{/searchByCategory(category= '-1')}" th:classappend="${activeAll}? 'active'" class="list-group-item">All</a>
+				<a th:href="@{/products/productShelf}"  class="list-group-item">All</a>
 				<a th:each="prod : ${categoryList}" th:href="@{/searchByCategory(category= ${prod.id})}"  th:text="${prod.type}"
 									th:classappend="${prod.type}? 'active'" class="list-group-item"></a>
 				
