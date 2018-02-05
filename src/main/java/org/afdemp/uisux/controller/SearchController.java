@@ -49,7 +49,7 @@ public class SearchController {
 		classActiveCategory = classActiveCategory.replaceAll("&", "");
 		model.addAttribute(classActiveCategory, true);
 		
-		List<Product> productList = productService.findByCategory(category);
+		List<Product> productList = productService.findByCategoryAndActiveTrue(category);
 		
 		if (productList.isEmpty()) {
 			model.addAttribute("emptyList", true);
@@ -75,7 +75,7 @@ public class SearchController {
 		List<Category> categoryList = categoryService.findAll();
 		model.addAttribute("categoryList", categoryList);
 		
-		List<Product> productList = productService.search(keyword);
+		List<Product> productList = productService.searchActive(keyword);
 		
 		if (productList.isEmpty()) {
 			model.addAttribute("emptyList", true);

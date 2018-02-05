@@ -44,7 +44,7 @@ public class ProductController {
 			model.addAttribute("user", user);
 		}
 		
-		List<Product> productList = productService.findAll();
+		List<Product> productList = productService.findAllActive();
 		List<Category> categoryList = categoryService.findAll();
 		
 		model.addAttribute("productList", productList);
