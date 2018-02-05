@@ -302,6 +302,27 @@ public class ProfileController {
 		return "myProfile";
 	}
 	
+	@RequestMapping(value="/setDefaultShippingAddress", method=RequestMethod.POST)
+	public String setDefaultShippingAddress(
+			@ModelAttribute("defaultShippingAddressId") Long defaultShippingAddressId, Principal principal, Model model
+			) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		addressService.setDefaultShippingAddress(defaultShippingAddressId, userRole);
+		
+		model.addAttribute("user", user);
+		model.addAttribute("listOfCreditCards", true);
+		model.addAttribute("classActiveBilling", true);
+		model.addAttribute("listOfShippingAddresses", true);
+		
+		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+		
+		return "myProfile";
+	}
+	
 	
 
 	
