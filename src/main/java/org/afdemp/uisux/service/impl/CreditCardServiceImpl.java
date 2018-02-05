@@ -50,4 +50,11 @@ public class CreditCardServiceImpl implements CreditCardService {
 		}	
 	}
 
+	@Override
+	public void removeFromUserRole(Long creditCardId, UserRole userRole) {
+		CreditCard creditCard = creditCardRepository.findOne(creditCardId);
+		creditCard.setUserRole(null);
+		creditCardRepository.save(creditCard);
+	}
+
 }

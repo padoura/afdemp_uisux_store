@@ -10,6 +10,8 @@ public interface CreditCardService {
 	CreditCard findById(Long creditCardId);
 
 	void setDefaultCreditCard(Long defaultCreditCardId, UserRole userRole);
+
+	void removeFromUserRole(Long creditCardId, UserRole userRole);
 	
 	
 	

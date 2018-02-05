@@ -323,6 +323,37 @@ public class ProfileController {
 		return "myProfile";
 	}
 	
+	@RequestMapping("/removeCreditCard")
+	public String removeCreditCard(
+			@ModelAttribute("id") Long creditCardId, Principal principal, Model model
+			){
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		CreditCard creditCard = creditCardService.findById(creditCardId);
+		
+		if(userRole.getUserRoleId() != creditCard.getUserRole().getUserRoleId()) {
+			return "badRequestPage";
+		} else {
+			
+			creditCardService.removeFromUserRole(creditCardId, userRole);
+			
+			model.addAttribute("user", user);
+			
+			model.addAttribute("listOfCreditCards", true);
+			model.addAttribute("classActiveBilling", true);
+			model.addAttribute("listOfShippingAddresses", true);
+			
+			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+			model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+			
+			return "myProfile";
+		}
+	}
+
+	
+	
 	
 
 	
@@ -347,24 +378,6 @@ public class ProfileController {
 //	
 
 //	
-//	@RequestMapping(value="/setDefaultShippingAddress", method=RequestMethod.POST)
-//	public String setDefaultShippingAddress(
-//			@ModelAttribute("defaultShippingAddressId") Long defaultShippingId, Principal principal, Model model
-//			) {
-//		User user = userService.findByUsername(principal.getName());
-//		userService.setUserDefaultShipping(defaultShippingId, user);
-//		
-//		model.addAttribute("user", user);
-//		model.addAttribute("listOfCreditCards", true);
-//		model.addAttribute("classActiveShipping", true);
-//		model.addAttribute("listOfShippingAddresses", true);
-//		
-//		model.addAttribute("userPaymentList", user.getUserPaymentList());
-//		model.addAttribute("userShippingList", user.getUserShippingList());
-//		model.addAttribute("orderList", user.getOrderList());
-//		
-//		return "myProfile";
-//	}
 //	
 //	@RequestMapping("/removeCreditCard")
 //	public String removeCreditCard(
