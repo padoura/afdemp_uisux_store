@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header2 :: common-header" />
+
+<body>
+	<div th:replace="common/header2 :: navbar" />
+
+	<div class="container">
+		
+			<div class="col-xs-2">
+				<img src="/image/shp.png" class="img-responsive" />
+			</div><div class="col-xs-3">
+				<img src="/image/appl.png" class="img-responsive" />
+			</div><div class="col-xs-3">
+				<img src="/image/peach.png" class="img-responsive" />
+			</div>
+		</div>
+		
+		<hr
+			style="position: absolute; width: 50%; height: 1px; background-color: #333; z-index: -3; margin-top: -440px;" />
+		<img class="img-responsive" src="/image/wood.png" 
+			style="margin-top: -85px;" />
+
+		<div class="row" style="margin-top: 60px;">
+			<div class="col-xs-3">
+				<h3><label for="category">Category</label></h3>
+				<div class="list-group" id="category">
+			<!-- 		<a th:href="@{/bookshelf(category='all')}" th:classappend="${activeAll}? 'active'" class="list-group-item">All</a>
+					<a th:href="@{/searchByCategory(category='Management')}" th:classappend="${activeManagement}? 'active'" class="list-group-item">category1</a>
+					<a th:href="@{/searchByCategory(category='Fiction')}" th:classappend="${activeFiction}? 'active'" class="list-group-item">category2</a>
+					<a th:href="@{/searchByCategory(category='Engineering')}" th:classappend="${activeEngineering}? 'active'" class="list-group-item">category3</a>
+					<a th:href="@{/searchByCategory(category='Programming')}" th:classappend="${activeProgramming}? 'active'" class="list-group-item">category4</a>
+					<a th:href="@{/searchByCategory(category='Arts &amp; Literature')}" th:classappend="${activeArtsLiterature}? 'active'" class="list-group-item">category5</a>
+				</div> -->
+				<a th:href="@{/products/productShelf}"  class="list-group-item">All</a>
+				<a th:each="prod : ${categoryList}" th:href="@{/searchByCategory(category= ${prod.id})}"  th:text="${prod.type}"
+									th:classappend="${prod.type}? 'active'" class="list-group-item"></a>
+				
+				</div>
+				
+			</div>
+			
+			
+			
+			
+
+<div class="container-fluid">
+		<div class="table-responsive">
+			<table id="productListTable" class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th>Product Name</th>
+						<th>id</th>
+						<th>our Price</th>
+						<th>Category</th>
+						<th>description</th>
+						<th>list Price</th>
+						<th>active</th>
+						<th>cart</th>
+						<th>wishlist</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-th-each="product : ${productList}">
+					
+						<td><a th:href="@{/product/productInfo(id=${product.id})}"><span th:text="${product.name}"></span></a></td>
+						<td th:text="${product.id}"></td>
+						<td th:text="${product.ourPrice}"></td>
+					<td th:text="${product.category.type}"></td>
+						<td th:text="${product.description}"></td>
+						<td th:text="${product.listPrice}"></td>
+						<td th:text="${product.active}"></td>
+						
+						<td><form th:action="@{/shoppingCart/addItem(id=${product.id})}" method="post">
+    
+							 <button type="submit" class="btn btn-info">add to cart</button>
+							 </form></td>
+	 						<td><form th:action="@{/wishlist/addItem(id=${product.id})}" method="post">
+   							 <button type="submit" class="btn btn-info">add to wishlist</button>
+							 </form></td>
+						
+						
+					</tr>
+				</tbody>
+			</table>
+	</div></div>
+					
+		</div>	
+		
+	
+	
+<div th:replace="common/header2 :: footer"/>
+
+	<div th:replace="common/header2 :: body-bottom-scripts" />
+	
+	<script>
+		$(document).ready(function() {
+			$('#productListTable').DataTable({
+				"lengthMenu":[[5,10,15,20,-1],[5,10,15,20,"All"]],
+				"ordering":false,
+				stateSave:true
+			});
+			
+			$("#productListTable").on('page.dt', function() {
+				$('html, body').animate({
+					scrollTop: $('#bookList').offset().top
+				}, 200);
+			});
+		});
+	</script>
+ -->
+ </body>
+</html>
