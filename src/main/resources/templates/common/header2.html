@@ -10,7 +10,7 @@
 <!-- Bootstrap core CSS -->
 <link href="/css/bootstrap.min.css" rel="stylesheet" />
 
-<link href="/css/non-responsive.css" rel="stylesheet" /> 
+<!-- <link href="/css/non-responsive.css" rel="stylesheet" />  -->
 
 <!-- data table -->
 <link th:href="@{/css/jquery.dataTables.min.css}" rel="stylesheet" />
@@ -26,11 +26,10 @@
 
 <body>
 	<div th:fragment="navbar">
-		<div class="page-top"
-			style="width: 100%; height: 20px; background-color: #f46b42;"></div>
+		
 		<!-- Static navbar -->
-		<nav class="navbar navbar-default navbar-inverse">
-			<div class="container-fluid">
+		<nav class="navbar navbar-default navbar-inverse navbar-static-top">
+					<div class="container-fluid">
 				<div class="navbar-header">
 					<a class="navbar-brand" th:href="@{/}">FRUID SYNDICATE STORE</a>
 				</div>
