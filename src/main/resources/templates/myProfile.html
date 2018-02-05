@@ -7,15 +7,17 @@
 
 	<div class="container">
 		<div class="row" style="margin-bottom: -100px;">
-			<div class="col-xs-8">
+			<div class="col-xs-6">
 				<h2 class="section-headline">
 					<h2 class="section-headline">
 						<span th:text="${#strings.toUpperCase(user.username)}"></span>
 					</h2>
 				</h2>
 			</div>
-			<div class="col-xs-4">
-				<img src="/image/logo.png" class="img-responsive" />
+			<div class="col-xs-2">
+				<img src="/image/pear.png" class="img-responsive" />
+			</div><div class="col-xs-3">
+				<img src="/image/appl.png" class="img-responsive" />
 			</div>
 		</div>
 		<hr
@@ -98,7 +100,7 @@
 												th:value="${user.email}" />
 										</div>
 										<p style="color: #828282">A valid email address. All
-											emails from the system withll be sent to this address. The
+											email from the system with be sent to this address. The
 											email address is not made public and will only be used if you
 											wish to receive a new password or wish to receive certain
 											notification.</p>
@@ -115,7 +117,7 @@
 												type="password" class="form-control" id="txtConfirmPassword" />
 										</div>
 										<p style="color: #828282">To change the current user
-											password, enter the new password in both fields.</p>
+											password, enter the new password .</p>
 
 										<button id="updateUserInfoButton" type="submit"
 											class="btn btn-primary">Save All</button>
@@ -380,7 +382,7 @@
 												</div>
 												<div class="col-xs-4">
 													<div class="form-group">
-														<label for="billingState">* State</label> <select
+														<label for="billingState">* province</label> <select
 															id="billingState" class="form-control"
 															th:name="userBillingState"
 															th:value="${userBilling.userBillingState}"
@@ -599,7 +601,7 @@
 												</div>
 												<div class="col-xs-4">
 													<div class="form-group">
-														<label for="shippingState">* State</label> <select
+														<label for="shippingState">* Province</label> <select
 															id="shippingState" class="form-control"
 															th:name="userShippingState"
 															th:value="${userShipping.userShippingState}"
