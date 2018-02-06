@@ -17,6 +17,8 @@ public interface CartItemService {
 	boolean emptyCart(Long shoppingCartId);
 	
 	HashSet<Product> commitSale(ShoppingCart shoppingCart,CreditCard creditCard,Address billingAddress,Address shippingAddress,String shippingMethod);
+	
+	ClientOrder commitAndGetSale(ShoppingCart shoppingCart,CreditCard creditCard,Address billingAddress,Address shippingAddress,String shippingMethod);
 
 	List<CartItem> findByClientOrder(ClientOrder clientOrder);
 

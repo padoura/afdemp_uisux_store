@@ -51,11 +51,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 				LOG.info("\n\n\nFAILURE:Invalid Argument passed\n\n");
 				return false;
 			}
-		
-		
-		
-		
-
 	}
 	
 	

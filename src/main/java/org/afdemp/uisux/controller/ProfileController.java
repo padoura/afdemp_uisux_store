@@ -26,8 +26,9 @@ import org.afdemp.uisux.service.ProductService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.service.impl.UserSecurityService;
+import org.afdemp.uisux.utility.MailConstructor;
 import org.afdemp.uisux.utility.SecurityUtility;
-import org.afdemp.uisux.utility.ΜailConstructor;
+import org.afdemp.uisux.utility.MailConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -55,7 +56,7 @@ public class ProfileController {
 	private CategoryService categoryService;
 
 	@Autowired
-	private ΜailConstructor mailConstructor;
+	private MailConstructor mailConstructor;
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -92,10 +93,7 @@ public class ProfileController {
 		
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("listOfShippingAddresses", true);
-		
-//		List<String> stateList = USConstants.listOfUSStatesCode;
-//		Collections.sort(stateList);
-//		model.addAttribute("stateList", stateList);
+
 		model.addAttribute("classActiveEdit", true);
 		
 		return "myProfile";
@@ -155,10 +153,7 @@ public class ProfileController {
 		
 		model.addAttribute("billingAddress", billingAddress);
 		model.addAttribute("creditCard", creditCard);
-		
-//		List<String> stateList = USConstants.listOfUSStatesCode;
-//		Collections.sort(stateList);
-//		model.addAttribute("stateList", stateList);
+
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());

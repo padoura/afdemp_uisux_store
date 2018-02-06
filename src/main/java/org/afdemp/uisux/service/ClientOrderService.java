@@ -9,7 +9,7 @@ import org.afdemp.uisux.domain.ClientOrder;
 
 public interface ClientOrderService {
 
-	AbstractSale createClientOrder(ClientOrder clientOrder);
+	ClientOrder createClientOrder(ClientOrder clientOrder);
 	
 	List<ClientOrder> fetchOrdersByPeriod(Timestamp fromTimestamp, Timestamp toTimestamp);
 	

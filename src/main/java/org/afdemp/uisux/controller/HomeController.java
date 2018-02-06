@@ -20,7 +20,7 @@ import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.service.impl.UserSecurityService;
 import org.afdemp.uisux.utility.SecurityUtility;
-import org.afdemp.uisux.utility.ΜailConstructor;
+import org.afdemp.uisux.utility.MailConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -48,7 +48,7 @@ public class HomeController {
 	private CategoryService categoryService;
 
 	@Autowired
-	private ΜailConstructor mailConstructor;
+	private MailConstructor mailConstructor;
 	
 	@Autowired
 	private JavaMailSender mailSender;
