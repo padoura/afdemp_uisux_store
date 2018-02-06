@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header2 :: common-header"/>
+
+<body>
+<div th:replace="common/header2 :: navbar"/>
+
+<div class="container">
+    
+    
+    <form th:action="@{/shoppingCart/addItem}" method="post">
+    	<input hidden="hidden" th:field="*{product.id}" />
+    	<div class="row" style="margin-top: 120px;">
+    		<div class="col-xs-3">
+    			<a th:href="@{/products/productShelf}">Back to product list</a><br/>
+    			<img class="img-responsive shelf-book" th:src="#{adminPath}+@{/image/product/}+${product.id}+'.png'" />
+     		</div>
+    		
+    		<div class="col-xs-9">
+    			<h3><span th:if="${addBookSuccess}" style="color: forestgreen"><i class="fa fa-check" aria-hidden="true" style="color: forestgreen"></i>Added to cart.</span></h3>
+    			<h3><span th:if="${notEnoughStock}" style="color: red">Oops, only <span th:text="${book.inStockNumber}"></span> In Stock.</span></h3>
+    				<div class="col-xs-9">
+				<h3 th:text="${product.name}"></h3>
+				<div class="row">
+					<div class="col-xs-6">
+						<p><strong>Remaining Stock: </strong><span th:text="${product.inStockNumber}"></span></p>
+						<p><strong>Made In: </strong><span th:text="${product.madeIn}"></span></p>
+						<p><strong>List Price: </strong><span th:text="${product.listPrice}"></span></p>
+						
+					</div>
+					<div class="col-xs-6">
+						<p><strong>ID: </strong><span th:text="${product.id}"></span></p>
+						<p><strong>Category: </strong><span th:text="${product.category.type}"></span></p>
+						
+					</div>
+				</div>
+				
+			</div>	
+    				<div class="col-xs-7">
+    					<div class="panel panel-default" style="border-width: 5px; margin-top: 20px;">
+    						<div class="panel-body">
+    							<div class="row">
+    								<div class="col-xs-6">
+    									<select name="qty">
+    										<option th:each="qty : ${qtyList}" th:value="${qty}" th:text="${qty}">
+    										</option>
+    									</select>
+    								</div>
+    								<div class="col-xs-6">
+    									<button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;">Add to Cart</button>
+    								</div>
+    							</div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    			
+    			
+    			<p th:utext="${product.description}"></p>
+    		</div>
+    	
+    </form>
+</div>
+<!-- end of container -->
+<div th:replace="common/header2 :: footer"/>
+
+<div th:replace="common/header2 :: body-bottom-scripts"/>
+</body>
+</html>
