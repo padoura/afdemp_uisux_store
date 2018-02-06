@@ -28,6 +28,7 @@ import org.afdemp.uisux.service.ProductService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.service.impl.UserSecurityService;
+import org.afdemp.uisux.utility.AbstractSaleUtility;
 import org.afdemp.uisux.utility.MailConstructor;
 import org.afdemp.uisux.utility.SecurityUtility;
 import org.afdemp.uisux.utility.MailConstructor;
@@ -38,6 +39,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -88,14 +90,7 @@ public class ProfileController {
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		Address userShipping = new Address();
 		model.addAttribute("userShipping", userShipping);
@@ -117,14 +112,7 @@ public class ProfileController {
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
@@ -142,13 +130,7 @@ public class ProfileController {
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
@@ -179,13 +161,7 @@ public class ProfileController {
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
 		
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		return "myProfile";
 	}
@@ -205,18 +181,10 @@ public class ProfileController {
 		creditCard.setUserRole(userRole);
 		creditCardService.createCreditCard(creditCard);
 		
-//		userRoleService.updateBillingAddress(billingAddress, creditCard, userRole);
-		
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
 		model.addAttribute("listOfShippingAddresses", true);
@@ -248,13 +216,7 @@ public class ProfileController {
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-			List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-			List<ClientOrder> clientOrderList = new ArrayList<>();
-			for (AbstractSale as : abstractSaleList) {
-				clientOrderList.add((ClientOrder) as);
-			}
-			
-			model.addAttribute("clientOrderList", clientOrderList);
+			model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 			
 			return "myProfile";
 		}
@@ -278,13 +240,7 @@ public class ProfileController {
 		
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		return "myProfile";
 	}
@@ -303,13 +259,7 @@ public class ProfileController {
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		model.addAttribute("listOfShippingAddresses", true);
 		model.addAttribute("classActiveShipping", true);
 		model.addAttribute("listOfCreditCards", true);
@@ -338,13 +288,7 @@ public class ProfileController {
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-			List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-			List<ClientOrder> clientOrderList = new ArrayList<>();
-			for (AbstractSale as : abstractSaleList) {
-				clientOrderList.add((ClientOrder) as);
-			}
-			
-			model.addAttribute("clientOrderList", clientOrderList);
+			model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 			
 			return "myProfile";
 		}
@@ -368,13 +312,7 @@ public class ProfileController {
 		
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		return "myProfile";
 	}
@@ -395,13 +333,7 @@ public class ProfileController {
 		
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
-		}
-		
-		model.addAttribute("clientOrderList", clientOrderList);
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		return "myProfile";
 	}
@@ -429,13 +361,7 @@ public class ProfileController {
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-			List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-			List<ClientOrder> clientOrderList = new ArrayList<>();
-			for (AbstractSale as : abstractSaleList) {
-				clientOrderList.add((ClientOrder) as);
-			}
-			
-			model.addAttribute("clientOrderList", clientOrderList);
+			model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 			
 			return "myProfile";
 		}
@@ -464,13 +390,7 @@ public class ProfileController {
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-			List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-			List<ClientOrder> clientOrderList = new ArrayList<>();
-			for (AbstractSale as : abstractSaleList) {
-				clientOrderList.add((ClientOrder) as);
-			}
-			
-			model.addAttribute("clientOrderList", clientOrderList);
+			model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 			
 			return "myProfile";
 		}
@@ -498,13 +418,7 @@ public class ProfileController {
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-			List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
-			List<ClientOrder> clientOrderList = new ArrayList<>();
-			for (AbstractSale as : abstractSaleList) {
-				clientOrderList.add((ClientOrder) as);
-			}
-			
-			model.addAttribute("clientOrderList", clientOrderList);
+			model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 			
 			Address shippingAddress = new Address();
 			model.addAttribute("shippingAddress", shippingAddress);
@@ -521,107 +435,74 @@ public class ProfileController {
 	
 	
 
-	
-	
-	
+	@RequestMapping(value="/updateUserInfo", method=RequestMethod.POST)
+	public String updateUserInfo(
+			@ModelAttribute("user") User user,
+			@ModelAttribute("newPassword") String newPassword,
+			Model model
+			) throws Exception {
+		User currentUser = userService.findOne(user.getId());
+		
+		if(currentUser == null) {
+			throw new Exception ("User not found");
+		}
+		
+		/*check email already exists*/
+		if (userService.findByEmail(user.getEmail())!=null) {
+			if(userService.findByEmail(user.getEmail()).getId() != currentUser.getId()) {
+				model.addAttribute("emailExists", true);
+				return "myProfile";
+			}
+		}
+		
+		/*check username already exists*/
+		if (userService.findByUsername(user.getUsername())!=null) {
+			if(userService.findByUsername(user.getUsername()).getId() != currentUser.getId()) {
+				model.addAttribute("usernameExists", true);
+				return "myProfile";
+			}
+		}
+		
+//		update password
+		if (newPassword != null && !newPassword.isEmpty() && !newPassword.equals("")){
+			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
+			String dbPassword = currentUser.getPassword();
+			if(passwordEncoder.matches(user.getPassword(), dbPassword)){
+				currentUser.setPassword(passwordEncoder.encode(newPassword));
+			} else {
+				model.addAttribute("incorrectPassword", true);
+				
+				return "myProfile";
+			}
+		}
+		
+		currentUser.setFirstName(user.getFirstName());
+		currentUser.setLastName(user.getLastName());
+		currentUser.setUsername(user.getUsername());
+		currentUser.setEmail(user.getEmail());
+		
+		userService.save(currentUser);
+		
+		model.addAttribute("updateSuccess", true);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("classActiveEdit", true);
+		
+		model.addAttribute("listOfShippingAddresses", true);
+		model.addAttribute("listOfCreditCards", true);
+		
+		UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getUsername());
 
+		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+				userDetails.getAuthorities());
+		
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
+		
+		return "myProfile";
+	}
 	
 }
-
-
-
-//
-//	
-//	
-
-//	
-
-//	
-//	
-
-//	
-//	
-
-//	
-
-//	
-
-//	
-//	
-
-//	
-//	
-//
-
-//	
-//	@RequestMapping(value="/updateUserInfo", method=RequestMethod.POST)
-//	public String updateUserInfo(
-//			@ModelAttribute("user") User user,
-//			@ModelAttribute("newPassword") String newPassword,
-//			Model model
-//			) throws Exception {
-//		User currentUser = userService.findById(user.getId());
-//		
-//		if(currentUser == null) {
-//			throw new Exception ("User not found");
-//		}
-//		
-//		/*check email already exists*/
-//		if (userService.findByEmail(user.getEmail())!=null) {
-//			if(userService.findByEmail(user.getEmail()).getId() != currentUser.getId()) {
-//				model.addAttribute("emailExists", true);
-//				return "myProfile";
-//			}
-//		}
-//		
-//		/*check username already exists*/
-//		if (userService.findByUsername(user.getUsername())!=null) {
-//			if(userService.findByUsername(user.getUsername()).getId() != currentUser.getId()) {
-//				model.addAttribute("usernameExists", true);
-//				return "myProfile";
-//			}
-//		}
-//		
-////		update password
-//		if (newPassword != null && !newPassword.isEmpty() && !newPassword.equals("")){
-//			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
-//			String dbPassword = currentUser.getPassword();
-//			if(passwordEncoder.matches(user.getPassword(), dbPassword)){
-//				currentUser.setPassword(passwordEncoder.encode(newPassword));
-//			} else {
-//				model.addAttribute("incorrectPassword", true);
-//				
-//				return "myProfile";
-//			}
-//		}
-//		
-//		currentUser.setFirstName(user.getFirstName());
-//		currentUser.setLastName(user.getLastName());
-//		currentUser.setUsername(user.getUsername());
-//		currentUser.setEmail(user.getEmail());
-//		
-//		userService.save(currentUser);
-//		
-//		model.addAttribute("updateSuccess", true);
-//		model.addAttribute("user", currentUser);
-//		model.addAttribute("classActiveEdit", true);
-//		
-//		model.addAttribute("listOfShippingAddresses", true);
-//		model.addAttribute("listOfCreditCards", true);
-//		
-//		UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getUsername());
-//
-//		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-//				userDetails.getAuthorities());
-//		
-//		SecurityContextHolder.getContext().setAuthentication(authentication);
-//		model.addAttribute("orderList", user.getOrderList());
-//		
-//		return "myProfile";
-//	}
-//	
-//	
-//	
-//	
-//	
-//}

@@ -153,6 +153,7 @@ public class HomeController {
 			@ModelAttribute("username") String username,
 			Model model
 			) throws Exception{
+		
 		model.addAttribute("classActiveNewAccount", true);
 		model.addAttribute("email", userEmail);
 		model.addAttribute("username", username);
@@ -166,11 +167,9 @@ public class HomeController {
 			}else {
 				model.addAttribute("clientAlreadyExistsFailure", true);
 			}
-			User user = new User();
 			return "myProfile";
 		}else if (userService.findByEmail(userEmail) != null) {
 			model.addAttribute("emailAlreadyExistsFailure", true);
-			User user = new User();
 			return "myProfile";
 		}
 		
@@ -197,7 +196,6 @@ public class HomeController {
 		
 		mailSender.send(email);
 		model.addAttribute("emailSent", "true");
-		user = new User();
 		return "myProfile";
 	}
 	
