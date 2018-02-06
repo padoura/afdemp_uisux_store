@@ -10,6 +10,8 @@ public interface AddressService {
 	Address findById(Long shippingAddressId);
 
 	void setDefaultShippingAddress(Long defaultShippingAddressId, UserRole userRole);
+
+	void removeFromUserRole(Long shippingAddressId, UserRole userRole);
 	
 
 }

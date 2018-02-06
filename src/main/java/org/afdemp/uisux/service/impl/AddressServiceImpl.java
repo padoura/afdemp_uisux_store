@@ -73,4 +73,11 @@ public class AddressServiceImpl implements AddressService{
 		
 	}
 
+	@Override
+	public void removeFromUserRole(Long shippingAddressId, UserRole userRole) {
+		Address shippingAddress = addressRepository.findOne(shippingAddressId);
+		shippingAddress.setUserRole(null);
+		addressRepository.save(shippingAddress);
+	}
+
 }

@@ -181,7 +181,7 @@ public class ProfileController {
 	
 	@RequestMapping("/updateCreditCard")
 	public String updateCreditCard(
-			@ModelAttribute("id") Long creditCardId, Principal principal, Model model
+			@ModelAttribute("creditCardId") Long creditCardId, Principal principal, Model model
 			) {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
@@ -254,7 +254,7 @@ public class ProfileController {
 	
 	@RequestMapping("/updateShippingAddress")
 	public String updateShippingAddress(
-			@ModelAttribute("id") Long shippingAddressId, Principal principal, Model model
+			@ModelAttribute("shippingAddressId") Long shippingAddressId, Principal principal, Model model
 			) {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
@@ -351,6 +351,35 @@ public class ProfileController {
 			return "myProfile";
 		}
 	}
+	
+	
+	@RequestMapping("/removeShippingAddress")
+	public String removeUserShipping(
+			@ModelAttribute("shippingAddressId") Long shippingAddressId, Principal principal, Model model
+			){
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		Address shippingAddress = addressService.findById(shippingAddressId);
+		
+		if(userRole.getUserRoleId() != shippingAddress.getUserRole().getUser().getId()) {
+			return "badRequestPage";
+		} else {
+			model.addAttribute("user", user);
+			
+			addressService.removeFromUserRole(shippingAddressId, userRole);
+			
+			model.addAttribute("listOfCreditCards", true);
+			model.addAttribute("classActiveBilling", true);
+			model.addAttribute("listOfShippingAddresses", true);
+			
+			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+			model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+			
+			return "myProfile";
+		}
+	}
 
 	
 	
@@ -379,55 +408,7 @@ public class ProfileController {
 
 //	
 //	
-//	@RequestMapping("/removeCreditCard")
-//	public String removeCreditCard(
-//			@ModelAttribute("id") Long creditCardId, Principal principal, Model model
-//			){
-//		User user = userService.findByUsername(principal.getName());
-//		UserPayment userPayment = userPaymentService.findById(creditCardId);
-//		
-//		if(user.getId() != userPayment.getUser().getId()) {
-//			return "badRequestPage";
-//		} else {
-//			model.addAttribute("user", user);
-//			userPaymentService.removeById(creditCardId);
-//			
-//			model.addAttribute("listOfCreditCards", true);
-//			model.addAttribute("classActiveBilling", true);
-//			model.addAttribute("listOfShippingAddresses", true);
-//			
-//			model.addAttribute("userPaymentList", user.getUserPaymentList());
-//			model.addAttribute("userShippingList", user.getUserShippingList());
-//			model.addAttribute("orderList", user.getOrderList());
-//			
-//			return "myProfile";
-//		}
-//	}
-//	
-//	@RequestMapping("/removeUserShipping")
-//	public String removeUserShipping(
-//			@ModelAttribute("id") Long userShippingId, Principal principal, Model model
-//			){
-//		User user = userService.findByUsername(principal.getName());
-//		UserShipping userShipping = userShippingService.findById(userShippingId);
-//		
-//		if(user.getId() != userShipping.getUser().getId()) {
-//			return "badRequestPage";
-//		} else {
-//			model.addAttribute("user", user);
-//			
-//			userShippingService.removeById(userShippingId);
-//			
-//			model.addAttribute("listOfShippingAddresses", true);
-//			model.addAttribute("classActiveShipping", true);
-//			
-//			model.addAttribute("userPaymentList", user.getUserPaymentList());
-//			model.addAttribute("userShippingList", user.getUserShippingList());
-//			model.addAttribute("orderList", user.getOrderList());
-//			
-//			return "myProfile";
-//		}
-//	}
+
 //	
 //	
 //
