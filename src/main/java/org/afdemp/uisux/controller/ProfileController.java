@@ -199,7 +199,13 @@ public class ProfileController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		
-		userRoleService.updateBillingAddress(billingAddress, creditCard, userRole);
+		billingAddress.setUserRole(userRole);
+		billingAddress = addressService.createAddress(billingAddress);
+		creditCard.setBillingAddress(billingAddress);
+		creditCard.setUserRole(userRole);
+		creditCardService.createCreditCard(creditCard);
+		
+//		userRoleService.updateBillingAddress(billingAddress, creditCard, userRole);
 		
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
