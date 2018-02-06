@@ -1,48 +1,32 @@
-//package org.afdemp.uisux.controller;
-//
-//import java.security.Principal;
-//import java.time.LocalDate;
-//import java.util.Collections;
-//import java.util.List;
-//import java.util.Locale;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.mail.javamail.JavaMailSender;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.web.bind.annotation.ModelAttribute;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
-//import org.springframework.web.bind.annotation.RequestParam;
-//
-//import com.bookstore.domain.BillingAddress;
-//import com.bookstore.domain.CartItem;
-//import com.bookstore.domain.Order;
-//import com.bookstore.domain.Payment;
-//import com.bookstore.domain.ShippingAddress;
-//import com.bookstore.domain.ShoppingCart;
-//import com.bookstore.domain.User;
-//import com.bookstore.domain.UserBilling;
-//import com.bookstore.domain.UserPayment;
-//import com.bookstore.domain.UserShipping;
-//import com.bookstore.service.BillingAddressService;
-//import com.bookstore.service.CartItemService;
-//import com.bookstore.service.OrderService;
-//import com.bookstore.service.PaymentService;
-//import com.bookstore.service.ShippingAddressService;
-//import com.bookstore.service.ShoppingCartService;
-//import com.bookstore.service.UserPaymentService;
-//import com.bookstore.service.UserService;
-//import com.bookstore.service.UserShippingService;
-//import com.bookstore.utility.MailConstructor;
-//import com.bookstore.utility.USConstants;
-//
-//@Controller
-//public class CheckoutController {
-//
-//	private ShippingAddress shippingAddress = new ShippingAddress();
-//	private BillingAddress billingAddress = new BillingAddress();
-//	private Payment payment = new Payment();
+package org.afdemp.uisux.controller;
+
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.List;
+
+import org.afdemp.uisux.domain.Address;
+import org.afdemp.uisux.domain.CartItem;
+import org.afdemp.uisux.domain.CreditCard;
+import org.afdemp.uisux.domain.ShoppingCart;
+import org.afdemp.uisux.domain.User;
+import org.afdemp.uisux.domain.security.UserRole;
+import org.afdemp.uisux.service.AddressService;
+import org.afdemp.uisux.service.CartItemService;
+import org.afdemp.uisux.service.CreditCardService;
+import org.afdemp.uisux.service.UserRoleService;
+import org.afdemp.uisux.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class CheckoutController {
+
+	private Address currentShippingAddress = new Address();
+	private Address currentBillingAddress = new Address();
+	private CreditCard currentCreditCard = new CreditCard();
 //
 //	@Autowired
 //	private JavaMailSender mailSender;
@@ -50,23 +34,23 @@
 //	@Autowired
 //	private MailConstructor mailConstructor;
 //	
-//	@Autowired
-//	private UserService userService;
-//
-//	@Autowired
-//	private CartItemService cartItemService;
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private UserRoleService userRoleService;
+
+	@Autowired
+	private CartItemService cartItemService;
 //	
 //	@Autowired
 //	private ShoppingCartService shoppingCartService;
 //
-//	@Autowired
-//	private ShippingAddressService shippingAddressService;
-//
-//	@Autowired
-//	private BillingAddressService billingAddressService;
-//
-//	@Autowired
-//	private PaymentService paymentService;
+	@Autowired
+	private AddressService addressService;
+	
+	@Autowired
+	private CreditCardService creditCardService;
 //
 //	@Autowired
 //	private UserShippingService userShippingService;
@@ -76,84 +60,85 @@
 //	
 //	@Autowired
 //	private OrderService orderService;
-//
-//	@RequestMapping("/checkout")
-//	public String checkout(@RequestParam("id") Long cartId,
-//			@RequestParam(value = "missingRequiredField", required = false) boolean missingRequiredField, Model model,
-//			Principal principal) {
-//		User user = userService.findByUsername(principal.getName());
-//
-//		if (cartId != user.getShoppingCart().getId()) {
-//			return "badRequestPage";
-//		}
-//
-//		List<CartItem> cartItemList = cartItemService.findByShoppingCart(user.getShoppingCart());
-//
-//		if (cartItemList.size() == 0) {
-//			model.addAttribute("emptyCart", true);
-//			return "forward:/shoppintCart/cart";
-//		}
-//
-//		for (CartItem cartItem : cartItemList) {
-//			if (cartItem.getBook().getInStockNumber() < cartItem.getQty()) {
-//				model.addAttribute("notEnoughStock", true);
-//				return "forward:/shoppingCart/cart";
-//			}
-//		}
-//
-//		List<UserShipping> userShippingList = user.getUserShippingList();
-//		List<UserPayment> userPaymentList = user.getUserPaymentList();
-//
-//		model.addAttribute("userShippingList", userShippingList);
-//		model.addAttribute("userPaymentList", userPaymentList);
-//
-//		if (userPaymentList.size() == 0) {
-//			model.addAttribute("emptyPaymentList", true);
-//		} else {
-//			model.addAttribute("emptyPaymentList", false);
-//		}
-//
-//		if (userShippingList.size() == 0) {
-//			model.addAttribute("emptyShippingList", true);
-//		} else {
-//			model.addAttribute("emptyShippingList", false);
-//		}
-//
-//		ShoppingCart shoppingCart = user.getShoppingCart();
-//
-//		for (UserShipping userShipping : userShippingList) {
-//			if (userShipping.isUserShippingDefault()) {
-//				shippingAddressService.setByUserShipping(userShipping, shippingAddress);
-//			}
-//		}
-//
-//		for (UserPayment userPayment : userPaymentList) {
-//			if (userPayment.isDefaultPayment()) {
-//				paymentService.setByUserPayment(userPayment, payment);
-//				billingAddressService.setByUserBilling(userPayment.getUserBilling(), billingAddress);
-//			}
-//		}
-//
-//		model.addAttribute("shippingAddress", shippingAddress);
-//		model.addAttribute("payment", payment);
-//		model.addAttribute("billingAddress", billingAddress);
-//		model.addAttribute("cartItemList", cartItemList);
-//		model.addAttribute("shoppingCart", user.getShoppingCart());
-//
-//		List<String> stateList = USConstants.listOfUSStatesCode;
-//		Collections.sort(stateList);
-//		model.addAttribute("stateList", stateList);
-//
-//		model.addAttribute("classActiveShipping", true);
-//
-//		if (missingRequiredField) {
-//			model.addAttribute("missingRequiredField", true);
-//		}
-//
-//		return "checkout";
-//
-//	}
-//
+
+	@RequestMapping("/checkout")
+	public String checkout(@RequestParam("shoppingCartId") Long shoppingCartId,
+			@RequestParam(value = "missingRequiredField", required = false) boolean missingRequiredField, Model model,
+			Principal principal) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		ShoppingCart shoppingCart = userRole.getShoppingCart();
+
+		if (shoppingCartId != shoppingCart.getId()) {
+			return "badRequestPage";
+		}
+
+		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
+
+		if (cartItemList.size() == 0) {
+			model.addAttribute("emptyCart", true);
+			return "forward:/shoppintCart/cart";
+		}
+
+		for (CartItem cartItem : cartItemList) {
+			if (cartItem.getProduct().getInStockNumber() < cartItem.getQty()) {
+				model.addAttribute("notEnoughStock", true);
+				return "forward:/shoppingCart/cart";
+			}
+		}
+
+		List<Address> shippingAddressList = userRole.getUserShippingAddressList();
+		List<CreditCard> creditCardList = userRole.getCreditCardList();
+
+		model.addAttribute("userShippingList", shippingAddressList);
+		model.addAttribute("userPaymentList", creditCardList);
+
+		if (creditCardList.size() == 0) {
+			model.addAttribute("emptyPaymentList", true);
+		} else {
+			model.addAttribute("emptyPaymentList", false);
+		}
+
+		if (shippingAddressList.size() == 0) {
+			model.addAttribute("emptyShippingList", true);
+		} else {
+			model.addAttribute("emptyShippingList", false);
+		}
+		
+		
+		
+
+		
+
+		for (Address ad : shippingAddressList) {
+			if (ad.isUserShippingDefault()) {
+				addressService.deepCopyAddress(ad, this.currentShippingAddress);
+			}
+		}
+
+		for (CreditCard cc : creditCardList) {
+			if (cc.isDefaultCreditCard()) {
+				creditCardService.deepCopyCreditCard(cc, this.currentCreditCard);
+				addressService.deepCopyAddress(cc.getBillingAddress(), this.currentBillingAddress);
+			}
+		}
+
+		model.addAttribute("shippingAddress", currentShippingAddress);
+		model.addAttribute("payment", currentCreditCard);
+		model.addAttribute("billingAddress", currentBillingAddress);
+		model.addAttribute("cartItemList", cartItemList);
+		model.addAttribute("shoppingCart", shoppingCart);
+
+		model.addAttribute("classActiveShipping", true);
+
+		if (missingRequiredField) {
+			model.addAttribute("missingRequiredField", true);
+		}
+
+		return "checkout";
+
+	}
+
 //	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
 //	public String checkoutPost(@ModelAttribute("shippingAddress") ShippingAddress shippingAddress,
 //			@ModelAttribute("billingAddress") BillingAddress billingAddress, @ModelAttribute("payment") Payment payment,
@@ -301,5 +286,5 @@
 //			return "checkout";
 //		}
 //	}
-//
-//}
+
+}

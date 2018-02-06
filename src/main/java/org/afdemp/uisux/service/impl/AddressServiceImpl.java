@@ -80,4 +80,18 @@ public class AddressServiceImpl implements AddressService{
 		addressRepository.save(shippingAddress);
 	}
 
+	@Override
+	public Address deepCopyAddress(Address ad, Address currentShippingAddress) {
+		currentShippingAddress.setCity(ad.getCity());
+		currentShippingAddress.setCountry(ad.getCountry());
+		currentShippingAddress.setReceiverName(ad.getReceiverName());
+		currentShippingAddress.setState(ad.getState());
+		currentShippingAddress.setStreet1(ad.getStreet1());
+		currentShippingAddress.setStreet2(ad.getStreet2());
+		currentShippingAddress.setZipcode(ad.getZipcode());
+		return currentShippingAddress;
+	}
+	
+	
+
 }

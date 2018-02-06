@@ -66,4 +66,15 @@ public class CreditCardServiceImpl implements CreditCardService {
 		creditCardRepository.save(creditCard);
 	}
 
+	@Override
+	public CreditCard deepCopyCreditCard(CreditCard cc, CreditCard currentCreditCard) {
+		currentCreditCard.setCardNumber(cc.getCardNumber());
+		currentCreditCard.setCvc(cc.getCvc());
+		currentCreditCard.setExpiryMonth(cc.getExpiryMonth());
+		currentCreditCard.setExpiryYear(cc.getExpiryYear());
+		currentCreditCard.setHolderName(cc.getHolderName());
+		currentCreditCard.setType(cc.getType());
+		return currentCreditCard;
+	}
+
 }

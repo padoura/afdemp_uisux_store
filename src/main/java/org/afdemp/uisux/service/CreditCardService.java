@@ -12,6 +12,8 @@ public interface CreditCardService {
 	void setDefaultCreditCard(Long defaultCreditCardId, UserRole userRole);
 
 	void removeFromUserRole(Long creditCardId, UserRole userRole);
+
+	CreditCard deepCopyCreditCard(CreditCard cc, CreditCard currentCreditCard);
 	
 	
 	

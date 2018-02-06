@@ -12,6 +12,8 @@ public interface AddressService {
 	void setDefaultShippingAddress(Long defaultShippingAddressId, UserRole userRole);
 
 	void removeFromUserRole(Long shippingAddressId, UserRole userRole);
+
+	Address deepCopyAddress(Address ad, Address currentShippingAddress);
 	
 
 }
