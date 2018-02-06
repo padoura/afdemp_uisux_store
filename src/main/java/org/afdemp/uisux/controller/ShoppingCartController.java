@@ -58,6 +58,7 @@ public class ShoppingCartController {
 			@ModelAttribute("qty") String qty,
 			Model model, Principal principal
 			) {
+		
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		

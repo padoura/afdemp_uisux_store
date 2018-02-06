@@ -115,8 +115,8 @@ public class ProfileController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		model.addAttribute("user", user);
-		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
-		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("CreditCartList", userRole.getCreditCardList());
+		model.addAttribute("ShippingAddressList", userRole.getUserShippingAddressList());
 		
 		List<AbstractSale> abstractSaleList	= userRole.getAbstractSaleList();
 		List<ClientOrder> clientOrderList = new ArrayList<>();
