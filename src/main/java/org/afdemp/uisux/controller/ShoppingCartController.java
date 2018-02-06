@@ -1,91 +1,97 @@
-//package org.afdemp.uisux.controller;
-//
-//import java.security.Principal;
-//import java.util.List;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.web.bind.annotation.ModelAttribute;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//
-//import com.bookstore.domain.Book;
-//import com.bookstore.domain.CartItem;
-//import com.bookstore.domain.ShoppingCart;
-//import com.bookstore.domain.User;
-//import com.bookstore.service.BookService;
-//import com.bookstore.service.CartItemService;
-//import com.bookstore.service.ShoppingCartService;
-//import com.bookstore.service.UserService;
-//
-//@Controller
-//@RequestMapping("/shoppingCart")
-//public class ShoppingCartController {
-//	
-//	@Autowired
-//	private UserService userService;
-//	
-//	@Autowired
-//	private CartItemService cartItemService;
-//	
-//	@Autowired
-//	private BookService bookService;
-//	
-//	@Autowired
-//	private ShoppingCartService shoppingCartService;
-//	
-//	@RequestMapping("/cart")
-//	public String shoppingCart(Model model, Principal principal) {
-//		User user = userService.findByUsername(principal.getName());
-//		ShoppingCart shoppingCart = user.getShoppingCart();
-//		
-//		List<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
-//		
-//		shoppingCartService.updateShoppingCart(shoppingCart);
-//		
-//		model.addAttribute("cartItemList", cartItemList);
-//		model.addAttribute("shoppingCart", shoppingCart);
-//		
-//		return "shoppingCart";
-//	}
-//
-//	@RequestMapping("/addItem")
-//	public String addItem(
-//			@ModelAttribute("book") Book book,
-//			@ModelAttribute("qty") String qty,
-//			Model model, Principal principal
-//			) {
-//		User user = userService.findByUsername(principal.getName());
-//		book = bookService.findOne(book.getId());
-//		
-//		if (Integer.parseInt(qty) > book.getInStockNumber()) {
-//			model.addAttribute("notEnoughStock", true);
-//			return "forward:/bookDetail?id="+book.getId();
-//		}
-//		
-//		CartItem cartItem = cartItemService.addBookToCartItem(book, user, Integer.parseInt(qty));
-//		model.addAttribute("addBookSuccess", true);
-//		
-//		return "forward:/bookDetail?id="+book.getId();
-//	}
-//	
-//	@RequestMapping("/updateCartItem")
-//	public String updateShoppingCart(
-//			@ModelAttribute("id") Long cartItemId,
-//			@ModelAttribute("qty") int qty
-//			) {
-//		CartItem cartItem = cartItemService.findById(cartItemId);
-//		cartItem.setQty(qty);
-//		cartItemService.updateCartItem(cartItem);
-//		
-//		return "forward:/shoppingCart/cart";
-//	}
-//	
-//	@RequestMapping("/removeItem")
-//	public String removeItem(@RequestParam("id") Long id) {
-//		cartItemService.removeCartItem(cartItemService.findById(id));
-//		
-//		return "forward:/shoppingCart/cart";
-//	}
-//}
+package org.afdemp.uisux.controller;
+
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.List;
+
+import org.afdemp.uisux.domain.ShoppingCart;
+import org.afdemp.uisux.domain.CartItem;
+import org.afdemp.uisux.domain.Product;
+import org.afdemp.uisux.domain.User;
+import org.afdemp.uisux.domain.security.UserRole;
+import org.afdemp.uisux.service.CartItemService;
+import org.afdemp.uisux.service.ProductService;
+import org.afdemp.uisux.service.UserRoleService;
+import org.afdemp.uisux.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping("/shoppingCart")
+public class ShoppingCartController {
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private UserRoleService userRoleService;
+
+	@Autowired
+	private CartItemService cartItemService;
+
+	@Autowired
+	private ProductService productService;
+
+	@RequestMapping("/cart")
+	public String shoppingCart(Model model, Principal principal) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		
+		ShoppingCart shoppingCart = userRole.getShoppingCart();
+		
+		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
+		
+		model.addAttribute("cartItemList", cartItemList);
+		model.addAttribute("shoppingCart", shoppingCart);
+		
+		return "shoppingCart";
+	}
+
+	@RequestMapping("/addItem")
+	public String addItem(
+			@ModelAttribute("product") Product product,
+			@ModelAttribute("qty") String qty,
+			Model model, Principal principal
+			) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		product = productService.findOne(product.getId());
+		
+		if (Integer.parseInt(qty) > product.getInStockNumber()) {
+			model.addAttribute("notEnoughStock", true);
+			return "forward:/productDetail?id="+product.getId();
+		}
+		
+		if (cartItemService.addToCart(userRole.getShoppingCart(), product, Integer.parseInt(qty))) {
+			model.addAttribute("addProductSuccess", true);
+		}else {
+			model.addAttribute("addProductFailure", true);
+		}
+		
+		return "forward:/productDetail?id="+product.getId();
+	}
+	
+	@RequestMapping("/updateCartItem")
+	public String updateShoppingCart(
+			@ModelAttribute("cartItemId") Long cartItemId,
+			@ModelAttribute("qty") int qty
+			) {
+		CartItem cartItem = cartItemService.findById(cartItemId);
+		if (qty > cartItem.getProduct().getInStockNumber())
+				cartItemService.updateToCart(cartItem, qty);
+		
+		return "forward:/shoppingCart/cart";
+	}
+	
+	@RequestMapping("/removeItem")
+	public String removeItem(@RequestParam("cartItemId") Long cartItemId) {
+		cartItemService.removeCartItem(cartItemId);
+		return "forward:/shoppingCart/cart";
+	}
+}

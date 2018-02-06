@@ -73,6 +73,14 @@ public class CartItemServiceImpl implements CartItemService{
 		return false;
 	}
 	
+
+	@Override
+	public boolean updateToCart(CartItem cartItem, int qty) {
+		
+		
+		return false;
+	}
+	
 	@Override
 	public HashSet<Product> commitSale(ShoppingCart shoppingCart,CreditCard creditCard, Address billingAddress,Address shippingAddress,String shippingMethod)
 	{
@@ -98,7 +106,7 @@ public class CartItemServiceImpl implements CartItemService{
 		}
 		else
 		{
-			BigDecimal total=CalculateGrandTotal(itemsInCart);
+			BigDecimal total=calculateGrandTotal(itemsInCart);
 			ClientOrder clientOrder=new ClientOrder();
 			clientOrder.setUserRole(shoppingCart.getUserRole());
 			clientOrder.setTotal(total);
@@ -122,9 +130,9 @@ public class CartItemServiceImpl implements CartItemService{
 	}
 	
 	@Override
-	public boolean removeCartItem(Long id,Long shoppingCartId)
+	public boolean removeCartItem(Long id)
 	{
-		if(cartItemRepository.deleteByIdAndShoppingCartId(id,shoppingCartId)>0)
+		if(cartItemRepository.deleteByIdAndShoppingCartId(id,findById(id).getShoppingCart().getId())>0)
 		{
 			LOG.info("\n\nSUCCESS: Removed cartItem {} from shoppingCart\n",id);
 			return true;
@@ -145,7 +153,7 @@ public class CartItemServiceImpl implements CartItemService{
 		return false;
 	}
 	
-	private BigDecimal CalculateGrandTotal(HashSet<CartItem> itemsInCart)
+	private BigDecimal calculateGrandTotal(HashSet<CartItem> itemsInCart)
 	{
 		BigDecimal grandTotal=BigDecimal.valueOf(0);
 			
@@ -160,6 +168,16 @@ public class CartItemServiceImpl implements CartItemService{
 	@Override
 	public List<CartItem> findByClientOrder(ClientOrder clientOrder) {
 		return cartItemRepository.findByAbstractSale(clientOrder);
+	}
+
+	@Override
+	public HashSet<CartItem> findByShoppingCart(ShoppingCart shoppingCart) {
+		return cartItemRepository.findByShoppingCart(shoppingCart);
+	}
+
+	@Override
+	public CartItem findById(Long cartItemId) {
+		return cartItemRepository.findOne(cartItemId);
 	}
 	
 }

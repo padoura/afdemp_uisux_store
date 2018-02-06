@@ -2,6 +2,7 @@ package org.afdemp.uisux.service.impl;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 
 import org.afdemp.uisux.domain.CartItem;
 import org.afdemp.uisux.domain.ShoppingCart;
@@ -25,6 +26,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 	
 	@Autowired
 	private CartItemRepository cartItemRepository;
+
+	@Autowired
+	private CartItemRepository cartItemService;
 	
 	@Override
 	public boolean createShoppingCart(UserRole userRole)

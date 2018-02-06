@@ -14,12 +14,18 @@ public interface CartItemService {
 
 	boolean addToCart(ShoppingCart shoppingCart, Product product, int qty);
 	
-	boolean removeCartItem(Long id,Long shoppingCartId);
-	
 	boolean emptyCart(Long shoppingCartId);
 	
 	HashSet<Product> commitSale(ShoppingCart shoppingCart,CreditCard creditCard,Address billingAddress,Address shippingAddress,String shippingMethod);
 
 	List<CartItem> findByClientOrder(ClientOrder clientOrder);
+
+	HashSet<CartItem> findByShoppingCart(ShoppingCart shoppingCart);
+
+	CartItem findById(Long cartItemId);
+
+	boolean updateToCart(CartItem cartItem, int qty);
+
+	boolean removeCartItem(Long id);
 	
 }
