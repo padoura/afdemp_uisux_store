@@ -12,11 +12,15 @@ import org.afdemp.uisux.domain.security.PasswordResetToken;
 import org.afdemp.uisux.domain.security.Role;
 import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.domain.Address;
+import org.afdemp.uisux.domain.CartItem;
 import org.afdemp.uisux.domain.Category;
+import org.afdemp.uisux.domain.ClientOrder;
 import org.afdemp.uisux.domain.CreditCard;
 import org.afdemp.uisux.domain.Product;
 import org.afdemp.uisux.service.AddressService;
+import org.afdemp.uisux.service.CartItemService;
 import org.afdemp.uisux.service.CategoryService;
+import org.afdemp.uisux.service.ClientOrderService;
 import org.afdemp.uisux.service.CreditCardService;
 import org.afdemp.uisux.service.ProductService;
 import org.afdemp.uisux.service.UserRoleService;
@@ -67,6 +71,12 @@ public class ProfileController {
 
 	@Autowired
 	private AddressService addressService;
+
+	@Autowired
+	private ClientOrderService clientOrderService;
+
+	@Autowired
+	private CartItemService cartItemService;
 	
 	@RequestMapping("/myProfile")
 	public String myProfile(Model model, Principal principal) {
@@ -354,7 +364,7 @@ public class ProfileController {
 	
 	
 	@RequestMapping("/removeShippingAddress")
-	public String removeUserShipping(
+	public String removeShippingAddress(
 			@ModelAttribute("shippingAddressId") Long shippingAddressId, Principal principal, Model model
 			){
 		User user = userService.findByUsername(principal.getName());
@@ -380,6 +390,45 @@ public class ProfileController {
 			return "myProfile";
 		}
 	}
+	
+	
+	@RequestMapping("/orderDetail")
+	public String orderDetail(
+			@RequestParam("clientOrderId") Long clientOrderId,
+			Principal principal, Model model
+			){
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+		
+		ClientOrder clientOrder = clientOrderService.findOne(clientOrderId);
+		
+		if(userRole.getUserRoleId() != clientOrder.getUserRole().getUser().getId()) {
+			return "badRequestPage";
+		} else {
+			List<CartItem> cartItemList = cartItemService.findByClientOrder(clientOrder);
+			
+			model.addAttribute("cartItemList", cartItemList);
+			model.addAttribute("user", user);
+			model.addAttribute("order", clientOrder);
+			
+			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
+			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+			model.addAttribute("abstractSaleList", userRole.getAbstractSaleList());
+			
+			Address shippingAddress = new Address();
+			model.addAttribute("shippingAddress", shippingAddress);
+			
+			
+			model.addAttribute("listOfShippingAddresses", true);
+			model.addAttribute("classActiveOrders", true);
+			model.addAttribute("listOfCreditCards", true);
+			model.addAttribute("displayOrderDetail", true);
+			
+			return "myProfile";
+		}
+	}
+	
+	
 
 	
 	
@@ -480,41 +529,6 @@ public class ProfileController {
 //		return "myProfile";
 //	}
 //	
-//	@RequestMapping("/orderDetail")
-//	public String orderDetail(
-//			@RequestParam("id") Long orderId,
-//			Principal principal, Model model
-//			){
-//		User user = userService.findByUsername(principal.getName());
-//		Order order = orderService.findOne(orderId);
-//		
-//		if(order.getUser().getId()!=user.getId()) {
-//			return "badRequestPage";
-//		} else {
-//			List<CartItem> cartItemList = cartItemService.findByOrder(order);
-//			model.addAttribute("cartItemList", cartItemList);
-//			model.addAttribute("user", user);
-//			model.addAttribute("order", order);
-//			
-//			model.addAttribute("userPaymentList", user.getUserPaymentList());
-//			model.addAttribute("userShippingList", user.getUserShippingList());
-//			model.addAttribute("orderList", user.getOrderList());
-//			
-//			UserShipping userShipping = new UserShipping();
-//			model.addAttribute("userShipping", userShipping);
-//			
-//			List<String> stateList = USConstants.listOfUSStatesCode;
-//			Collections.sort(stateList);
-//			model.addAttribute("stateList", stateList);
-//			
-//			model.addAttribute("listOfShippingAddresses", true);
-//			model.addAttribute("classActiveOrders", true);
-//			model.addAttribute("listOfCreditCards", true);
-//			model.addAttribute("displayOrderDetail", true);
-//			
-//			return "myProfile";
-//		}
-//	}
 //	
 //	
 //	
