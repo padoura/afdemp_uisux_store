@@ -297,7 +297,8 @@ public class ProfileController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		
-		userRoleService.updateShippingAddress(shippingAddress, userRole);
+		shippingAddress.setUserRole(userRole);
+		shippingAddress = addressService.createAddress(shippingAddress);
 		
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
