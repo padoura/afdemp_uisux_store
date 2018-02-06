@@ -1,8 +1,10 @@
 package org.afdemp.uisux.controller;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -144,59 +146,59 @@ public class HomeController {
 		return "myProfile";
 	}
 	
-//	@RequestMapping(value="/newUser", method = RequestMethod.POST)
-//	public String newUserPost(
-//			HttpServletRequest request,
-//			@ModelAttribute("email") String userEmail,
-//			@ModelAttribute("username") String username,
-//			Model model
-//			) throws Exception{
-//		model.addAttribute("classActiveNewAccount", true);
-//		model.addAttribute("email", userEmail);
-//		model.addAttribute("username", username);
-//		
-//		if (userService.findByUsername(username) != null) {
-//			model.addAttribute("usernameExists", true);
-//			
-//			return "myAccount";
-//		}
-//		
-//		if (userService.findByEmail(userEmail) != null) {
-//			model.addAttribute("emailExists", true);
-//			
-//			return "myAccount";
-//		}
-//		
-//		User user = new User();
-//		user.setUsername(username);
-//		user.setEmail(userEmail);
-//		
-//		String password = SecurityUtility.randomPassword();
-//		
-//		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
-//		user.setPassword(encryptedPassword);
-//		
-//		Role role = new Role();
-//		role.setRoleId(1);
-//		role.setName("ROLE_USER");
-//		Set<UserRole> userRoles = new HashSet<>();
-//		userRoles.add(new UserRole(user, role));
-//		userService.createUser(user, userRoles);
-//		
-//		String token = UUID.randomUUID().toString();
-//		userService.createPasswordResetTokenForUser(user, token);
-//		
-//		String appUrl = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
-//		
-//		SimpleMailMessage email = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
-//		
-//		mailSender.send(email);
-//		
-//		model.addAttribute("emailSent", "true");
-//		model.addAttribute("orderList", user.getOrderList());
-//		
-//		return "myAccount";
-//	}
+	@RequestMapping(value="/newUser", method = RequestMethod.POST)
+	public String newUserPost(
+			HttpServletRequest request,
+			@ModelAttribute("email") String userEmail,
+			@ModelAttribute("username") String username,
+			Model model
+			) throws Exception{
+		model.addAttribute("classActiveNewAccount", true);
+		model.addAttribute("email", userEmail);
+		model.addAttribute("username", username);
+		
+		
+		User client = userService.findByUsername(username);
+		if (client != null) {
+			if (!userRoleService.hasThisRole("ROLE_CLIENT", client)) {
+				userService.addRoleToExistingUser(client, "ROLE_CLIENT");
+				model.addAttribute("addedRoleToExistingUser", true); //no other changes to existing user takes place
+			}else {
+				model.addAttribute("clientAlreadyExistsFailure", true);
+			}
+			User user = new User();
+			return "myProfile";
+		}else if (userService.findByEmail(userEmail) != null) {
+			model.addAttribute("emailAlreadyExistsFailure", true);
+			User user = new User();
+			return "myProfile";
+		}
+		
+		User user = new User();
+		
+		String password = SecurityUtility.randomPassword();
+		
+		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+		user.setPassword(encryptedPassword);
+		user.setEmail(userEmail);
+		
+		Role role=new Role();
+		role.setRoleId(2);
+		role.setName("ROLE_CLIENT");
+		Set<UserRole> userRoles = new HashSet<>();
+		userRoles.add(new UserRole(user, role));
+		userService.createUser(user, userRoles);
+		String token = UUID.randomUUID().toString();
+		userService.createPasswordResetTokenForUser(user, token);
 
+		String appUrl = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
+		
+		SimpleMailMessage email = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
+		
+		mailSender.send(email);
+		model.addAttribute("emailSent", "true");
+		user = new User();
+		return "myProfile";
+	}
 	
 }
