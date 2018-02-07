@@ -471,7 +471,7 @@ public class ProfileController {
 				currentUser.setPassword(passwordEncoder.encode(newPassword));
 			} else {
 				model.addAttribute("incorrectPassword", true);
-				
+				model.addAttribute("classActiveEdit", true);
 				return "myProfile";
 			}
 		}

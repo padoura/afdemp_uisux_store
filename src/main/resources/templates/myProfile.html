@@ -146,7 +146,7 @@
 										</thead>
 										 <tbody>
 											<tr th:each="order : ${clientOrderList}">
-												<td><a th:href="@{/orderDetail(id=${order.id})}"><span
+												<td><a th:href="@{/orderDetail(clientOrderId=${order.id})}"><span
 														th:text="${order.submittedDate}"></span></a></td>
 												<td data-th-text="${order.id}"></td>
 												<td data-th-text="${order.total}"></td>
