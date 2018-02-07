@@ -14,6 +14,8 @@ public interface CreditCardService {
 	void removeFromUserRole(Long creditCardId, UserRole userRole);
 
 	CreditCard deepCopyCreditCard(CreditCard cc, CreditCard currentCreditCard);
+
+	void save(CreditCard creditCard);
 	
 	
 	

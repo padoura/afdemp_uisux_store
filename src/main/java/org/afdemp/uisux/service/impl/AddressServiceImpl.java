@@ -91,6 +91,11 @@ public class AddressServiceImpl implements AddressService{
 		currentShippingAddress.setZipcode(ad.getZipcode());
 		return currentShippingAddress;
 	}
+
+	@Override
+	public void save(Address address) {
+		addressRepository.save(address);
+	}
 	
 	
 

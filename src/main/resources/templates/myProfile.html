@@ -170,26 +170,26 @@
 													<div class="col-xs-4">
 														<div class="panel panel-default height">
 															<div class="panel-heading">
-																<strong>Billing Details</strong>
+																<strong>Shipping Address Details</strong>
 															</div>
 															<div class="panel-body">
 																<span
-																	th:text="${order.billingAddress.receiverName}"></span><br />
+																	th:text="${order.shippingAddress.receiverName}"></span><br />
 																<span
-																	th:text="${order.billingAddress.street1}+' '+${order.billingAddress.street2}"></span><br />
+																	th:text="${order.shippingAddress.street1}+' '+${order.shippingAddress.street2}"></span><br />
 																<span
-																	th:text="${order.billingAddress.city}"></span><br />
+																	th:text="${order.shippingAddress.city}"></span><br />
 																<span
-																	th:text="${order.billingAddress.state}"></span><br />
+																	th:text="${order.shippingAddress.state}"></span><br />
 																<span
-																	th:text="${order.billingAddress.zipcode}"></span><br />
+																	th:text="${order.shippingAddress.zipcode}"></span><br />
 															</div>
 														</div>
 													</div>
 													<div class="col-xs-4">
 														<div class="panel panel-default height">
 															<div class="panel-heading">
-																<strong>Payment Information</strong>
+																<strong>Credit Card Details</strong>
 															</div>
 															<div class="panel-body">
 																<span th:text="${order.creditCard.holderName}">Card
@@ -203,7 +203,7 @@
 													<div class="col-xs-4">
 														<div class="panel panel-default height">
 															<div class="panel-heading">
-																<strong>Billing Details</strong>
+																<strong>Billing Address Details</strong>
 															</div>
 															<div class="panel-body">
 																
@@ -239,7 +239,7 @@
 																			Price</strong></td>
 																	<td class="text-center"><strong>Item
 																			Quantity</strong></td>
-																	<td class="text-right"><strong>Total</strong></td>
+																	<td class="text-right"><strong>Price</strong></td>
 																</tr>
 															</thead>
 															<tbody>
@@ -248,13 +248,13 @@
 																	<td class="text-center"
 																		data-th-text="${cartItem.product.ourPrice}"></td>
 																	<td class="text-center" data-th-text="${cartItem.qty}"></td>
-																	<td class="text-center"
+																	<td class="text-right"
 																		data-th-text="${cartItem.currentPrice}"></td>
 																</tr>
 																<tr>
 																	<td class="highrow"></td>
 																	<td class="highrow"></td>
-																	<td class="highrow text-center"><strong>Total</strong></td>
+																	<td class="highrow text-right"><strong>Total</strong></td>
 																	<td class="highrow text-right"
 																		data-th-text="${order.total}"></td>
 																</tr>
@@ -291,7 +291,7 @@
 									</ol>
 
 									<div th:if="${listOfCreditCards}">
-										<form th:action="@{/setDefaultPayment}" method="post">
+										<form th:action="@{/setDefaultCreditCard}" method="post">
 											<table class="table">
 												<thead>
 													<tr>
@@ -301,15 +301,15 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr th:each="CreditCart : ${CreditCartList}">
-														<td><input type="radio" name="defaultCreditCartId"
-															th:value="${CreditCart.id}"
-															th:checked="${CreditCart.defaultCreditCard}" /></td>
-														<td th:text="${CreditCart.holderName}"></td>
+													<tr th:each="creditCart : ${creditCartList}">
+														<td><input type="radio" name="defaultCreditCardId"
+															th:value="${creditCart.id}"
+															th:checked="${creditCart.defaultCreditCard}" /></td>
+														<td th:text="${creditCart.holderName}"></td>
 														<td><a
-															th:href="@{/updateCreditCard(id=${CreditCart.id})}"><i
+															th:href="@{/updateCreditCard(creditCardId=${creditCart.id})}"><i
 																class="fa fa-pencil"></i></a>&nbsp;&nbsp;<a
-															th:href="@{/removeCreditCard(id=${CreditCart.id})}"><i
+															th:href="@{/removeCreditCard(creditCardId=${creditCart.id})}"><i
 																class="fa fa-times"></i></a></td>
 													</tr>
 												</tbody>
@@ -319,8 +319,8 @@
 									</div>
 
 									<div th:if="${addNewCreditCard}">
-										<form th:action="@{addNewCreditCard}" method="post">
-											<div class="bg-info" th:if="${updateUserPaymentInfo}">User
+										<form th:action="@{/addNewCreditCard}" method="post">
+											<div class="bg-info" th:if="${updateCreditCardInfo}">User
 												info updated.</div>
 
 											<input hidden="hidden" name="id" th:value="${creditCard.id}" />

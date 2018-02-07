@@ -32,6 +32,9 @@ public class CreditCardServiceImpl implements CreditCardService {
 			tempCard.setHolderName(creditCard.getHolderName());
 			tempCard.setType(creditCard.getType());
 			tempCard=creditCardRepository.save(creditCard);
+		}else {
+			deepCopyCreditCard(creditCard, tempCard);
+			tempCard=creditCardRepository.save(tempCard);
 		}
 		
 		return tempCard;
@@ -74,7 +77,13 @@ public class CreditCardServiceImpl implements CreditCardService {
 		currentCreditCard.setExpiryYear(cc.getExpiryYear());
 		currentCreditCard.setHolderName(cc.getHolderName());
 		currentCreditCard.setType(cc.getType());
+		currentCreditCard.setBillingAddress(cc.getBillingAddress());
 		return currentCreditCard;
+	}
+
+	@Override
+	public void save(CreditCard creditCard) {
+		creditCardRepository.save(creditCard);
 	}
 
 }

@@ -110,8 +110,8 @@ public class ProfileController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		model.addAttribute("user", user);
-		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
-		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("creditCartList", userRole.getCreditCardList());
+		model.addAttribute("shippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		model.addAttribute("listOfCreditCards", true);
@@ -149,7 +149,6 @@ public class ProfileController {
 		
 		model.addAttribute("addNewCreditCard", true);
 		model.addAttribute("classActiveBilling", true);
-		model.addAttribute("listOfShippingAddresses", true);
 		
 		Address billingAddress = new Address();
 		CreditCard creditCard = new CreditCard();
@@ -172,23 +171,27 @@ public class ProfileController {
 			@ModelAttribute("billingAddress") Address billingAddress,
 			Principal principal, Model model
 			){
+		
+		System.out.println(creditCard.getHolderName());
+		
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		
 		billingAddress.setUserRole(userRole);
 		billingAddress = addressService.createAddress(billingAddress);
+		addressService.save(billingAddress);
+		billingAddress.setUserRole(userRole);
 		creditCard.setBillingAddress(billingAddress);
 		creditCard.setUserRole(userRole);
-		creditCardService.createCreditCard(creditCard);
+		creditCard = creditCardService.createCreditCard(creditCard); // if it already exists in db, the credit card is returned here
 		
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
-		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
-		model.addAttribute("listOfShippingAddresses", true);
-		
+		model.addAttribute("listOfCreditCards", true);
+
 		return "myProfile";
 	}
 	
@@ -302,8 +305,6 @@ public class ProfileController {
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		
 		creditCardService.setDefaultCreditCard(defaultCreditCardId, userRole);
-		
-		
 		
 		model.addAttribute("user", user);
 		model.addAttribute("listOfCreditCards", true);
