@@ -59,7 +59,7 @@
 								
 								<p th:if="${cartItem.product.inStockNumber==0}"
 									style="color: darkred;">Product Unavailable</p>
-								<a th:href="@{/shoppingCart/removeItem?id=}+${cartItem.id}">delete</a>
+								<a th:href="@{/shoppingCart/removeItem?cartItemId=}+${cartItem.id}">delete</a>
 								</div>
 							</div>
 
