@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header2 :: common-header" />
+
+<body>
+	<div th:replace="common/header2 :: navbar" />
+
+	<div class="container">
+		
+
+		<div class="row" style="margin-top: 10px;">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-6 text-left">
+						<a class="btn btn-warning" th:href="@{/products/productShelf}">Continue
+							Shopping</a>
+					</div>
+				
+					<div class="row">
+						<div class="col-xs-8 ">
+							<h4 style="margin-left:70px;">Products</h4>
+						</div>
+						<div class="col-xs-2">
+							<h4>Price</h4>
+						</div>
+						
+					</div>
+
+					<!--**************** display products in cart ****************-->
+
+					<div class="row" th:each="cartItem : ${wishlistProductList}">
+							<hr />
+							<div class="col-xs-2">
+								<a th:href="@{productDetail(id=${cartItem.product.id})}"> <img
+									style="width:70px;"
+									class="img-responsive center-block"
+									th:src="#{adminPath}+@{/image/product/}+
+								${cartItem.product.id}+'.png'" />
+								</a>
+							</div>
+							<div class="col-xs-6">
+								<div style="margin-left:50px;">
+								<a th:href="@{/products/productDetail?id=}+${cartItem.product.id}"><h4 th:text="${cartItem.product.name}"></h4></a>
+								
+								<a th:href="@{/wishlist/removeItem?wishlistProductId=}+${cartItem.id}">delete</a>
+								</div>
+							</div>
+
+							<div class="col-xs-2">
+								<h5 style="color: #db3208; font-size: large;">
+									&euro;<span th:text="${cartItem.product.ourPrice}"
+										th:style="${cartItem.product.inStockNumber}==0? 'text-decoration: line-through' : ''"></span>
+								</h5>
+							</div>
+							
+							
+							
+							
+							
+				
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<!-- end of container -->
+<div th:replace="common/header2 :: footer"/>
+
+	<div th:replace="common/header2 :: body-bottom-scripts" />
+</body>
+</html>
