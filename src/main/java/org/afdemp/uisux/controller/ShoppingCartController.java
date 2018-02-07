@@ -46,6 +46,13 @@ public class ShoppingCartController {
 		
 		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 		
+		for(CartItem ci:cartItemList)
+		{
+			ci.setCurrentPrice(ci.getProduct().getOurPrice());
+		}
+		
+		shoppingCart.setGrandTotal(cartItemService.getGrandTotal(shoppingCart));
+		
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", shoppingCart);
 		

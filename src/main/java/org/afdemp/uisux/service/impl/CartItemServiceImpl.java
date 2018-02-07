@@ -12,7 +12,6 @@ import org.afdemp.uisux.domain.CreditCard;
 import org.afdemp.uisux.domain.Product;
 import org.afdemp.uisux.domain.ShoppingCart;
 import org.afdemp.uisux.repository.CartItemRepository;
-import org.afdemp.uisux.repository.ClientOrderRepository;
 import org.afdemp.uisux.service.AccountService;
 import org.afdemp.uisux.service.CartItemService;
 import org.afdemp.uisux.service.ClientOrderService;
@@ -30,6 +29,9 @@ public class CartItemServiceImpl implements CartItemService{
 	
 	@Autowired
 	private CartItemRepository cartItemRepository;
+	
+	@Autowired
+	private CartItemService cartItemSservice;
 	
 	@Autowired
 	private ShoppingCartService shoppingCartService;
@@ -200,6 +202,7 @@ public class CartItemServiceImpl implements CartItemService{
 		return false;
 	}
 	
+	
 	private BigDecimal calculateGrandTotal(HashSet<CartItem> itemsInCart)
 	{
 		BigDecimal grandTotal=BigDecimal.valueOf(0);
@@ -211,6 +214,14 @@ public class CartItemServiceImpl implements CartItemService{
 		
 		return grandTotal;
 	}
+	
+	@Override
+	public BigDecimal getGrandTotal(ShoppingCart shoppingCart)
+	{
+		BigDecimal grandTotal=calculateGrandTotal(cartItemRepository.findByShoppingCart(shoppingCart));
+		return grandTotal;
+	}
+	
 
 	@Override
 	public List<CartItem> findByClientOrder(ClientOrder clientOrder) {
