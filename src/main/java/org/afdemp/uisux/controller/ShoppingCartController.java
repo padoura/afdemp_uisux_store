@@ -46,6 +46,13 @@ public class ShoppingCartController {
 		
 		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 		
+		for(CartItem ci:cartItemList)
+		{
+			ci.setCurrentPrice(ci.getProduct().getOurPrice());
+		}
+		
+		shoppingCart.setGrandTotal(cartItemService.getGrandTotal(shoppingCart));
+		
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", shoppingCart);
 		
@@ -84,7 +91,7 @@ public class ShoppingCartController {
 			@ModelAttribute("qty") int qty
 			) {
 		CartItem cartItem = cartItemService.findById(cartItemId);
-		if (qty > cartItem.getProduct().getInStockNumber())
+		if (qty <= cartItem.getProduct().getInStockNumber() && qty > 0)
 				cartItemService.updateToCart(cartItem, qty);
 		
 		return "forward:/shoppingCart/cart";

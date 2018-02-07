@@ -1,5 +1,6 @@
 package org.afdemp.uisux.service;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,5 +30,8 @@ public interface CartItemService {
 	void updateToCart(CartItem cartItem, int qty);
 
 	boolean removeCartItem(Long id);
+	
+	BigDecimal getGrandTotal(ShoppingCart shoppingCart);
+	
 	
 }

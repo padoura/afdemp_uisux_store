@@ -12,7 +12,6 @@ import org.afdemp.uisux.domain.CreditCard;
 import org.afdemp.uisux.domain.Product;
 import org.afdemp.uisux.domain.ShoppingCart;
 import org.afdemp.uisux.repository.CartItemRepository;
-import org.afdemp.uisux.repository.ClientOrderRepository;
 import org.afdemp.uisux.service.AccountService;
 import org.afdemp.uisux.service.CartItemService;
 import org.afdemp.uisux.service.ClientOrderService;
@@ -32,6 +31,9 @@ public class CartItemServiceImpl implements CartItemService{
 	private CartItemRepository cartItemRepository;
 	
 	@Autowired
+	private CartItemService cartItemSservice;
+	
+	@Autowired
 	private ShoppingCartService shoppingCartService;
 	
 	@Autowired
@@ -48,27 +50,30 @@ public class CartItemServiceImpl implements CartItemService{
 	@Override
 	public boolean addToCart(ShoppingCart shoppingCart, Product product, int qty)
 	{
-		CartItem cartItem=new CartItem();
-		cartItem=cartItemRepository.findByShoppingCartAndProduct(shoppingCart, product);
-		if(cartItem==null)
-		{	
-			cartItem=new CartItem();
-			
-			cartItem.setShoppingCart(shoppingCart);
-			cartItem.setProduct(product);
-			cartItem.setQty(qty);
-			
-			cartItemRepository.save(cartItem);
-			
-			return true;
-		}
-		else if (cartItem !=null && qty >0)
-		{
-			cartItem.setQty(cartItem.getQty()+qty);
-			cartItemRepository.save(cartItem);
-			
-			System.out.println("\n\nCartItem modified");
-			return true;
+		if (qty > 0) {
+			CartItem cartItem=new CartItem();
+			cartItem=cartItemRepository.findByShoppingCartAndProduct(shoppingCart, product);
+
+			if(cartItem==null)
+			{	
+				cartItem=new CartItem();
+				
+				cartItem.setShoppingCart(shoppingCart);
+				cartItem.setProduct(product);
+				cartItem.setQty(qty);
+				
+				cartItemRepository.save(cartItem);
+				
+				return true;
+			}
+			else
+			{
+				cartItem.setQty(cartItem.getQty()+qty);
+				cartItemRepository.save(cartItem);
+				
+				System.out.println("\n\nCartItem modified");
+				return true;
+			}
 		}
 		return false;
 	}
@@ -200,6 +205,7 @@ public class CartItemServiceImpl implements CartItemService{
 		return false;
 	}
 	
+	
 	private BigDecimal calculateGrandTotal(HashSet<CartItem> itemsInCart)
 	{
 		BigDecimal grandTotal=BigDecimal.valueOf(0);
@@ -211,6 +217,14 @@ public class CartItemServiceImpl implements CartItemService{
 		
 		return grandTotal;
 	}
+	
+	@Override
+	public BigDecimal getGrandTotal(ShoppingCart shoppingCart)
+	{
+		BigDecimal grandTotal=calculateGrandTotal(cartItemRepository.findByShoppingCart(shoppingCart));
+		return grandTotal;
+	}
+	
 
 	@Override
 	public List<CartItem> findByClientOrder(ClientOrder clientOrder) {
