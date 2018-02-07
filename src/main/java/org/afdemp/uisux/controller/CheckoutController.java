@@ -16,6 +16,7 @@ import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.service.AddressService;
 import org.afdemp.uisux.service.CartItemService;
 import org.afdemp.uisux.service.CreditCardService;
+import org.afdemp.uisux.service.ShoppingCartService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.utility.MailConstructor;
@@ -55,6 +56,9 @@ public class CheckoutController {
 	
 	@Autowired
 	private CreditCardService creditCardService;
+	
+	@Autowired
+	private ShoppingCartService shoppingCartService;
 
 	@RequestMapping("/checkout")
 	public String checkout(@RequestParam("shoppingCartId") Long shoppingCartId,
@@ -81,6 +85,8 @@ public class CheckoutController {
 				return "forward:/shoppingCart/cart";
 			}
 		}
+		
+		shoppingCartService.setGrandTotal(shoppingCart);
 
 		List<Address> shippingAddressList = userRole.getUserShippingAddressList();
 		List<CreditCard> creditCardList = userRole.getCreditCardList();

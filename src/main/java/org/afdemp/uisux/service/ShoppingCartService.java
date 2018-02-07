@@ -8,6 +8,8 @@ import org.afdemp.uisux.domain.security.UserRole;
 public interface ShoppingCartService {
 
 	boolean createShoppingCart(UserRole userRole);
+
+	void setGrandTotal(ShoppingCart shoppingCart);
 	
 	
 	
