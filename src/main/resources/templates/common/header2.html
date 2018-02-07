@@ -57,7 +57,9 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li><a th:href="@{/shoppingCart/cart}">SHOPPING CART</a></li>
-						<li><a th:href="@{/shoppingCart/cart}">WHISHLIST</a></li>
+						<li><a th:href="@{/wishlist/}">WISHLIST</a></li>
+						<li><a th:href="@{/products/productShelf}">PRODUCT SHELF</a></li>
+						
 						<li><a sec:authorize="isAnonymous()" th:href="@{/login}">MY
 								ACCOUNT</a></li>
 						<li><a sec:authorize="isAuthenticated()"

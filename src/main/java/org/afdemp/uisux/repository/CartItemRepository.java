@@ -20,7 +20,9 @@ public interface CartItemRepository extends CrudRepository<CartItem, Long> {
 	
 	HashSet<CartItem> findByShoppingCart(ShoppingCart shoppingCart);
 	
+	@Transactional
 	int deleteByIdAndShoppingCartId(Long id, Long shoppingCartId);
+	
 	
 	int deleteByShoppingCartId(Long shoppingCartId);
 	

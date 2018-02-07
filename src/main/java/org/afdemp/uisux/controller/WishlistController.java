@@ -47,7 +47,7 @@ public class WishlistController {
 		model.addAttribute("wishlist", wishlist);
 		
 		for (Product p : productList) {
-			if (p.getInStockNumber() > 0) {
+			if (p.getInStockNumber() > 0 && p.isActive()) {
 				model.addAttribute("productsAvailable", true);
 				break;
 			}
@@ -73,7 +73,7 @@ public class WishlistController {
 			model.addAttribute("addProductFailure", true);
 		}
 		
-		return "forward:/productDetail?id="+product.getId();
+		return "redirect:/products/productDetail?id="+product.getId();
 	}
 	
 	

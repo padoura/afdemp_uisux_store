@@ -9,6 +9,7 @@ import org.afdemp.uisux.domain.ShoppingCart;
 import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.repository.CartItemRepository;
 import org.afdemp.uisux.repository.ShoppingCartRepository;
+import org.afdemp.uisux.service.CartItemService;
 import org.afdemp.uisux.service.ShoppingCartService;
 import org.afdemp.uisux.service.UserService;
 import org.slf4j.Logger;
@@ -25,10 +26,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 	private ShoppingCartRepository shoppingCartRepository;
 	
 	@Autowired
-	private CartItemRepository cartItemRepository;
+	private CartItemService cartItemService;
 
 	@Autowired
-	private CartItemRepository cartItemService;
+	private CartItemRepository cartItemRepository;
 	
 	@Override
 	public boolean createShoppingCart(UserRole userRole)
@@ -51,6 +52,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 				LOG.info("\n\n\nFAILURE:Invalid Argument passed\n\n");
 				return false;
 			}
+	}
+
+	@Override
+	public void setGrandTotal(ShoppingCart shoppingCart) {
+		shoppingCart.setGrandTotal(cartItemService.getGrandTotal(shoppingCart));
+		shoppingCartRepository.save(shoppingCart);
 	}
 	
 	

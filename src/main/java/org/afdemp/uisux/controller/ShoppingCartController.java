@@ -11,6 +11,7 @@ import org.afdemp.uisux.domain.User;
 import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.service.CartItemService;
 import org.afdemp.uisux.service.ProductService;
+import org.afdemp.uisux.service.ShoppingCartService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class ShoppingCartController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private ShoppingCartService shoppingCartService;
+
 	@RequestMapping("/cart")
 	public String shoppingCart(Model model, Principal principal) {
 		User user = userService.findByUsername(principal.getName());
@@ -51,7 +55,7 @@ public class ShoppingCartController {
 			ci.setCurrentPrice(ci.getProduct().getOurPrice());
 		}
 		
-		shoppingCart.setGrandTotal(cartItemService.getGrandTotal(shoppingCart));
+		shoppingCartService.setGrandTotal(shoppingCart);
 		
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", shoppingCart);

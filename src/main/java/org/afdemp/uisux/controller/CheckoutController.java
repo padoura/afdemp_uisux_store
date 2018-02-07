@@ -16,6 +16,7 @@ import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.service.AddressService;
 import org.afdemp.uisux.service.CartItemService;
 import org.afdemp.uisux.service.CreditCardService;
+import org.afdemp.uisux.service.ShoppingCartService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.utility.MailConstructor;
@@ -55,6 +56,9 @@ public class CheckoutController {
 	
 	@Autowired
 	private CreditCardService creditCardService;
+	
+	@Autowired
+	private ShoppingCartService shoppingCartService;
 
 	@RequestMapping("/checkout")
 	public String checkout(@RequestParam("shoppingCartId") Long shoppingCartId,
@@ -81,12 +85,14 @@ public class CheckoutController {
 				return "forward:/shoppingCart/cart";
 			}
 		}
+		
+		shoppingCartService.setGrandTotal(shoppingCart);
 
 		List<Address> shippingAddressList = userRole.getUserShippingAddressList();
 		List<CreditCard> creditCardList = userRole.getCreditCardList();
 
 		model.addAttribute("userShippingList", shippingAddressList);
-		model.addAttribute("userPaymentList", creditCardList);
+		model.addAttribute("creditCardList", creditCardList);
 
 		if (creditCardList.size() == 0) {
 			model.addAttribute("emptyPaymentList", true);
@@ -119,7 +125,7 @@ public class CheckoutController {
 		}
 
 		model.addAttribute("shippingAddress", currentShippingAddress);
-		model.addAttribute("payment", currentCreditCard);
+		model.addAttribute("creditCard", currentCreditCard);
 		model.addAttribute("billingAddress", currentBillingAddress);
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", shoppingCart);
@@ -136,7 +142,7 @@ public class CheckoutController {
 
 	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
 	public String checkoutPost(@ModelAttribute("shippingAddress") Address shippingAddress,
-			@ModelAttribute("billingAddress") Address billingAddress, @ModelAttribute("payment") CreditCard creditCard,
+			@ModelAttribute("billingAddress") Address billingAddress, @ModelAttribute("creditCard") CreditCard creditCard,
 			@ModelAttribute("billingSameAsShipping") String billingSameAsShipping,
 			@ModelAttribute("shippingMethod") String shippingMethod, Principal principal, Model model) {
 		User user = userService.findByUsername(principal.getName());
@@ -161,12 +167,25 @@ public class CheckoutController {
 				|| billingAddress.getZipcode().isEmpty())
 			return "redirect:/checkout?id=" + shoppingCart.getId() + "&missingRequiredField=true";
 		
+		System.out.println(shippingAddress.getReceiverName());
+		System.out.println(billingAddress.getReceiverName());
+		System.out.println(billingAddress.getCity());
+		
+		billingAddress.setUserRole(userRole);
+		shippingAddress.setUserRole(userRole);
+		creditCard.setUserRole(userRole);
+		
 		billingAddress = addressService.createAddress(billingAddress);
 		shippingAddress = addressService.createAddress(shippingAddress);
 		creditCard = creditCardService.createCreditCard(creditCard);
 		
+		
+		
 		ClientOrder clientOrder = cartItemService.commitAndGetSale(shoppingCart, creditCard, billingAddress, shippingAddress, shippingMethod);
 		
+		System.out.println(shippingAddress.getReceiverName());
+		System.out.println(billingAddress.getReceiverName());
+		System.out.println(billingAddress.getCity());
 		mailSender.send(mailConstructor.constructOrderConfirmationEmail(user, clientOrder, Locale.ENGLISH));
 		
 		cartItemService.emptyCart(shoppingCart.getId());
@@ -217,9 +236,9 @@ public class CheckoutController {
 			model.addAttribute("emptyShippingList", false);
 
 			if (creditCardList.size() == 0) {
-				model.addAttribute("emptyCreditCardList", true);
+				model.addAttribute("emptyPaymentList", true);
 			} else {
-				model.addAttribute("emptyCreditCardList", false);
+				model.addAttribute("emptyPaymentList", false);
 			}
 
 
@@ -260,7 +279,7 @@ public class CheckoutController {
 
 			model.addAttribute("classActivePayment", true);
 
-			model.addAttribute("emptyCreditCardList", false);
+			model.addAttribute("emptyPaymentList", false);
 
 			if (shippingAddressList.size() == 0) {
 				model.addAttribute("emptyShippingList", true);

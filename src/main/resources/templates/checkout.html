@@ -164,7 +164,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr th:each="userPayment : ${userPaymentList}">
+											<tr th:each="userPayment : ${creditCardList}">
 												<td th:text="${userPayment.holderName}"></td>
 												<td><a
 													th:href="@{/setPaymentMethod(userPaymentId=${userPayment.id})}">use
@@ -180,7 +180,7 @@
 											<div class="form-group">
 												<label for="cardType">* Select Card Type: </label> <select
 													class="form-control" id="cardType" name="type"
-													th:value="${payment.type}">
+													th:value="${creditCard.type}">
 													<option value="visa">Visa</option>
 													<option value="mastercard">Mastercard</option>
 													<option value="discover">Discover</option>
@@ -192,14 +192,14 @@
 												<label for="cardHolder">* Card Holder Name:</label> <input
 													type="text" class="form-control" id="cardHolder"
 													required="required" placeHolder="Card Holder Name"
-													th:name="holderName" th:value="${payment.holderName}" />
+													th:name="holderName" th:value="${creditCard.holderName}" />
 											</div>
 											<div class="form-group">
 												<label for="cardNumber">* Card Number:</label>
 												<div class="input-group">
 													<input type="tel" class="form-control" id="cardNumber"
 														required="required" placeHolder="Valid Card Number"
-														th:name="cardNumber" th:value="${payment.cardNumber}" />
+														th:name="cardNumber" th:value="${creditCard.cardNumber}" />
 													<span class="input-group-addon"><i
 														class="fa fa-credit-card" aria-hidden="true"></i></span>
 												</div>
@@ -214,7 +214,7 @@
 												<div class="row">
 													<div class="col-xs-6">
 														<select class="form-control" name="expiryMonth"
-															required="required" th:value="${payment.expiryMonth}">
+															required="required" th:value="${creditCard.expiryMonth}">
 															<option disabled="disabled">-- Month --</option>
 															<option value="01">Jan (01)</option>
 															<option value="02">Feb (02)</option>
@@ -232,7 +232,7 @@
 													</div>
 													<div class="col-xs-6">
 														<select class="form-control" name="expiryYear"
-															th:value="${payment.expiryYear}">
+															th:value="${creditCard.expiryYear}">
 															<option disabled="disabled">-- Year --</option>
 															<option value="2017">2017</option>
 															<option value="2018">2018</option>
@@ -257,7 +257,7 @@
 												<label for="cardCVC">CV Code</label> <input id="cardCVC"
 													type="tel" class="form-control" name="cvc"
 													placeholder="CVC" th:name="cvc"
-													th:value="${payment.cvc}" />
+													th:value="${creditCard.cvc}" />
 											</div>
 										</div>
 									</div>
@@ -284,7 +284,7 @@
 									</div>
 									<div class="form-group">
 										<label for="receiverName">* Receiver Name</label> <input type="text"
-											class="form-control" id="receiverName"
+											class="form-control billingAddress" id="receiverName"
 											placeholder="Receiver Name" name="receiverName"
 											th:value="${billingAddress.receiverName}" />
 									</div> 
@@ -396,7 +396,7 @@
 									<h4 class="col-xs-12 text-right">
 										<strong style="font-size: large;">Order Total (<span
 											th:text="${#lists.size(cartItemList)}"></span> items):
-										</strong> <span style="color: #db3208; font-szie: large;">$<span
+										</strong> <span style="color: #db3208; font-szie: large;">&euro;<span
 											th:text="${shoppingCart.grandTotal}"></span></span>
 									</h4>
 									<br />
