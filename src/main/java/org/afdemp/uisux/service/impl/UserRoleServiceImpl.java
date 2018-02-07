@@ -15,6 +15,7 @@ import org.afdemp.uisux.service.AccountService;
 import org.afdemp.uisux.service.CreditCardService;
 import org.afdemp.uisux.service.ShoppingCartService;
 import org.afdemp.uisux.service.UserRoleService;
+import org.afdemp.uisux.service.WishlistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class UserRoleServiceImpl implements UserRoleService{
 
 	@Autowired
 	private CreditCardRepository creditCardRepository;
+
+	@Autowired
+	private WishlistService wishlistService;
 	
 	@Override
 	public boolean createUserRole(UserRole userRole)
@@ -54,7 +58,10 @@ public class UserRoleServiceImpl implements UserRoleService{
 			userRole=userRoleRepository.save(userRole);
 			shoppingCartService.createShoppingCart(userRole);
 			
-			if(userRole.getRole().getRoleId()==1L)
+			if(userRole.getRole().getRoleId()==2L)
+			{
+				wishlistService.createWishlist(userRole);
+			}else if(userRole.getRole().getRoleId()==1L)
 			{
 				accountService.createAccount(userRole, 0.00);
 			}

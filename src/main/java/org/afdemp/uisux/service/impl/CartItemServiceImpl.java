@@ -66,7 +66,7 @@ public class CartItemServiceImpl implements CartItemService{
 				
 				return true;
 			}
-			else
+			else if (cartItem.getQty()+qty <= product.getInStockNumber())
 			{
 				cartItem.setQty(cartItem.getQty()+qty);
 				cartItemRepository.save(cartItem);

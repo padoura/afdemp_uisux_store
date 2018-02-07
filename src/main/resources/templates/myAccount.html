@@ -54,11 +54,11 @@
 										information.</div>
 									<form th:action="@{/newUser}" method="post">
 										<div class="form-group">
-											<label for="newUsername">* Username: </label>&nbsp;<span
+											<label for="username">* Username: </label>&nbsp;<span
 												style="color: red;" th:if="${usernameExists}">Username
 												already exists. Choose a different one.</span> <input
 												required="required" type="text" class="form-control"
-												id="newUsername" name="username" />
+												id="username" name="username" />
 											<p style="color: #828282">Enter your username here.</p>
 										</div>
 

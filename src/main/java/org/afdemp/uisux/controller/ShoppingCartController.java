@@ -73,7 +73,7 @@ public class ShoppingCartController {
 		
 		if (Integer.parseInt(qty) > product.getInStockNumber()) {
 			model.addAttribute("notEnoughStock", true);
-			return "forward:/productDetail?id="+product.getId();
+			return "redirect:/products/productDetail?id="+product.getId();
 		}
 		
 		if (cartItemService.addToCart(userRole.getShoppingCart(), product, Integer.parseInt(qty))) {
@@ -82,7 +82,7 @@ public class ShoppingCartController {
 			model.addAttribute("addProductFailure", true);
 		}
 		
-		return "forward:/productDetail?id="+product.getId();
+		return "redirect:/products/productDetail?id="+product.getId();
 	}
 	
 	@RequestMapping("/updateCartItem")

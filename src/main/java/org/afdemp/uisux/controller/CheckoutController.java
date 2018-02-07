@@ -161,6 +161,10 @@ public class CheckoutController {
 				|| billingAddress.getZipcode().isEmpty())
 			return "redirect:/checkout?id=" + shoppingCart.getId() + "&missingRequiredField=true";
 		
+		billingAddress = addressService.createAddress(billingAddress);
+		shippingAddress = addressService.createAddress(shippingAddress);
+		creditCard = creditCardService.createCreditCard(creditCard);
+		
 		ClientOrder clientOrder = cartItemService.commitAndGetSale(shoppingCart, creditCard, billingAddress, shippingAddress, shippingMethod);
 		
 		mailSender.send(mailConstructor.constructOrderConfirmationEmail(user, clientOrder, Locale.ENGLISH));
