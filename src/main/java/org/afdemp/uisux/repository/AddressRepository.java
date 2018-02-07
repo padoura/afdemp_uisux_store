@@ -8,4 +8,6 @@ public interface AddressRepository extends CrudRepository<Address, Long> {
 	
 	Address findByReceiverNameAndStreet1AndCityAndZipcodeAndUserRole(String receiverName,String street1, String city, String zipcode,UserRole userRole);
 
+	Address findByIdAndUserRole(Long id, UserRole userRole);
+
 }

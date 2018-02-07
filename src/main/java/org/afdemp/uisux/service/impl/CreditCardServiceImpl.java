@@ -78,6 +78,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 		currentCreditCard.setHolderName(cc.getHolderName());
 		currentCreditCard.setType(cc.getType());
 		currentCreditCard.setBillingAddress(cc.getBillingAddress());
+		currentCreditCard.setDefaultCreditCard(cc.isDefaultCreditCard());
 		return currentCreditCard;
 	}
 
