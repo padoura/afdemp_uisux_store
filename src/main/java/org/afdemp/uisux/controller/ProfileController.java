@@ -92,11 +92,8 @@ public class ProfileController {
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
-		Address userShipping = new Address();
-		model.addAttribute("userShipping", userShipping);
-		
-		model.addAttribute("listOfCreditCards", true);
-		model.addAttribute("listOfShippingAddresses", true);
+		Address shippingAddress = new Address();
+		model.addAttribute("shippingAddress", shippingAddress);
 
 		model.addAttribute("classActiveEdit", true);
 		
@@ -110,13 +107,12 @@ public class ProfileController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		model.addAttribute("user", user);
-		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
-		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
+		model.addAttribute("creditCartList", userRole.getCreditCardList());
+		model.addAttribute("shippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
-		model.addAttribute("listOfShippingAddresses", true);
 		
 		return "myProfile";
 	}
@@ -132,8 +128,7 @@ public class ProfileController {
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
 		
-		model.addAttribute("listOfCreditCards", true);
-		model.addAttribute("classActiveBilling", true);
+		model.addAttribute("classActiveShipping", true);
 		model.addAttribute("listOfShippingAddresses", true);
 		
 		return "myProfile";
@@ -149,7 +144,6 @@ public class ProfileController {
 		
 		model.addAttribute("addNewCreditCard", true);
 		model.addAttribute("classActiveBilling", true);
-		model.addAttribute("listOfShippingAddresses", true);
 		
 		Address billingAddress = new Address();
 		CreditCard creditCard = new CreditCard();
@@ -172,23 +166,27 @@ public class ProfileController {
 			@ModelAttribute("billingAddress") Address billingAddress,
 			Principal principal, Model model
 			){
+		
+		System.out.println(creditCard.getHolderName());
+		
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		
 		billingAddress.setUserRole(userRole);
 		billingAddress = addressService.createAddress(billingAddress);
+		addressService.save(billingAddress);
+		billingAddress.setUserRole(userRole);
 		creditCard.setBillingAddress(billingAddress);
 		creditCard.setUserRole(userRole);
-		creditCardService.createCreditCard(creditCard);
+		creditCard = creditCardService.createCreditCard(creditCard); // if it already exists in db, the credit card is returned here
 		
 		model.addAttribute("user", user);
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
-		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
-		model.addAttribute("listOfShippingAddresses", true);
-		
+		model.addAttribute("listOfCreditCards", true);
+
 		return "myProfile";
 	}
 	
@@ -212,7 +210,6 @@ public class ProfileController {
 			
 			model.addAttribute("addNewCreditCard", true);
 			model.addAttribute("classActiveBilling", true);
-			model.addAttribute("listOfShippingAddresses", true);
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
@@ -232,7 +229,6 @@ public class ProfileController {
 		
 		model.addAttribute("addNewShippingAddress", true);
 		model.addAttribute("classActiveShipping", true);
-		model.addAttribute("listOfCreditCards", true);
 		
 		Address shippingAddress = new Address();
 		
@@ -260,9 +256,8 @@ public class ProfileController {
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
 		model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
-		model.addAttribute("listOfShippingAddresses", true);
 		model.addAttribute("classActiveShipping", true);
-		model.addAttribute("listOfCreditCards", true);
+		model.addAttribute("listOfShippingAddresses", true);
 		
 		return "myProfile";
 	}
@@ -284,7 +279,6 @@ public class ProfileController {
 			
 			model.addAttribute("addNewShippingAddress", true);
 			model.addAttribute("classActiveShipping", true);
-			model.addAttribute("listOfCreditCards", true);
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
@@ -303,12 +297,9 @@ public class ProfileController {
 		
 		creditCardService.setDefaultCreditCard(defaultCreditCardId, userRole);
 		
-		
-		
 		model.addAttribute("user", user);
-		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
-		model.addAttribute("listOfShippingAddresses", true);
+		model.addAttribute("listOfCreditCards", true);
 		
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 		model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
@@ -327,8 +318,7 @@ public class ProfileController {
 		addressService.setDefaultShippingAddress(defaultShippingAddressId, userRole);
 		
 		model.addAttribute("user", user);
-		model.addAttribute("listOfCreditCards", true);
-		model.addAttribute("classActiveBilling", true);
+		model.addAttribute("classActiveShipping", true);
 		model.addAttribute("listOfShippingAddresses", true);
 		
 		model.addAttribute("userCreditCartList", userRole.getCreditCardList());
@@ -357,7 +347,6 @@ public class ProfileController {
 			
 			model.addAttribute("listOfCreditCards", true);
 			model.addAttribute("classActiveBilling", true);
-			model.addAttribute("listOfShippingAddresses", true);
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
@@ -384,8 +373,7 @@ public class ProfileController {
 			
 			addressService.removeFromUserRole(shippingAddressId, userRole);
 			
-			model.addAttribute("listOfCreditCards", true);
-			model.addAttribute("classActiveBilling", true);
+			model.addAttribute("classActiveShipping", true);
 			model.addAttribute("listOfShippingAddresses", true);
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
@@ -424,9 +412,7 @@ public class ProfileController {
 			model.addAttribute("shippingAddress", shippingAddress);
 			
 			
-			model.addAttribute("listOfShippingAddresses", true);
 			model.addAttribute("classActiveOrders", true);
-			model.addAttribute("listOfCreditCards", true);
 			model.addAttribute("displayOrderDetail", true);
 			
 			return "myProfile";
@@ -471,7 +457,7 @@ public class ProfileController {
 				currentUser.setPassword(passwordEncoder.encode(newPassword));
 			} else {
 				model.addAttribute("incorrectPassword", true);
-				
+				model.addAttribute("classActiveEdit", true);
 				return "myProfile";
 			}
 		}

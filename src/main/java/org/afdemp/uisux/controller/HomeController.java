@@ -168,10 +168,10 @@ public class HomeController {
 			}else {
 				model.addAttribute("clientAlreadyExistsFailure", true);
 			}
-			return "index";
+			return "myAccount";
 		}else if (userService.findByEmail(userEmail) != null) {
-			model.addAttribute("emailAlreadyExistsFailure", true);
-			return "index";
+			model.addAttribute("emailExists", true);
+			return "myAccount";
 		}
 		
 		User user = new User();
@@ -199,7 +199,7 @@ public class HomeController {
 		mailSender.send(email);
 		model.addAttribute("emailSent", "true");
 
-		return "index";
+		return "myAccount";
 	}
 	
 }

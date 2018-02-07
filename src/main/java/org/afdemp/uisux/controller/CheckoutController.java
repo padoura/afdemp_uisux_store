@@ -173,15 +173,14 @@ public class CheckoutController {
 				|| billingAddress.getZipcode().isEmpty())
 			return "redirect:/checkout?id=" + shoppingCart.getId() + "&missingRequiredField=true";
 		
-		System.out.println(shippingAddress.getReceiverName());
-		System.out.println(billingAddress.getReceiverName());
-		System.out.println(billingAddress.getCity());
-		
 		billingAddress.setUserRole(userRole);
 		shippingAddress.setUserRole(userRole);
 		creditCard.setUserRole(userRole);
 		
+		
 		billingAddress = addressService.createAddress(billingAddress);
+		creditCard.setBillingAddress(billingAddress);
+		
 		shippingAddress = addressService.createAddress(shippingAddress);
 		creditCard = creditCardService.createCreditCard(creditCard);
 		
@@ -272,7 +271,7 @@ public class CheckoutController {
 			addressService.deepCopyAddress(billingAddress, currentBillingAddress);
 
 			model.addAttribute("shippingAddress", this.currentShippingAddress);
-			model.addAttribute("payment", this.currentCreditCard);
+			model.addAttribute("creditCard", this.currentCreditCard);
 			model.addAttribute("billingAddress", this.currentBillingAddress);
 			model.addAttribute("cartItemList", cartItemList);
 			model.addAttribute("shoppingCart", shoppingCart);

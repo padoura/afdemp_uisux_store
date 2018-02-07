@@ -14,6 +14,8 @@ public interface AddressService {
 	void removeFromUserRole(Long shippingAddressId, UserRole userRole);
 
 	Address deepCopyAddress(Address ad, Address currentShippingAddress);
+
+	void save(Address address);
 	
 
 }

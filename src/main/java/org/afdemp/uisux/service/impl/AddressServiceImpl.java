@@ -29,7 +29,7 @@ public class AddressServiceImpl implements AddressService{
 		}
 		else
 		{
-			Address tempAddress=addressRepository.findByReceiverNameAndStreet1AndCityAndZipcodeAndUserRole(address.getReceiverName(), address.getStreet1(), address.getCity(), address.getZipcode(),address.getUserRole());
+			Address tempAddress=addressRepository.findByIdAndUserRole(address.getId(),address.getUserRole());
 			if(tempAddress==null) 
 			{
 				tempAddress = new Address();
@@ -40,8 +40,12 @@ public class AddressServiceImpl implements AddressService{
 				tempAddress.setState(address.getState());
 				tempAddress.setCountry(address.getCountry());
 				tempAddress.setZipcode(address.getZipcode());
+				tempAddress.setUserRole(address.getUserRole());
 				tempAddress=addressRepository.save(tempAddress);
 				LOG.info("SUCCESS: Address Succesfully Added!!");
+			}else {
+				deepCopyAddress(address, tempAddress);
+				tempAddress=addressRepository.save(tempAddress);
 			}
 			
 			return tempAddress;
@@ -89,7 +93,13 @@ public class AddressServiceImpl implements AddressService{
 		currentShippingAddress.setStreet1(ad.getStreet1());
 		currentShippingAddress.setStreet2(ad.getStreet2());
 		currentShippingAddress.setZipcode(ad.getZipcode());
+		currentShippingAddress.setUserShippingDefault(ad.isUserShippingDefault());
 		return currentShippingAddress;
+	}
+
+	@Override
+	public void save(Address address) {
+		addressRepository.save(address);
 	}
 	
 	
