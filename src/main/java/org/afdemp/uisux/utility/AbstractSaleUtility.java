@@ -11,11 +11,14 @@ import org.springframework.stereotype.Component;
 public class AbstractSaleUtility {
 	
 	public static List<ClientOrder> castToClientList(List<AbstractSale> abstractSaleList){
-		List<ClientOrder> clientOrderList = new ArrayList<>();
-		for (AbstractSale as : abstractSaleList) {
-			clientOrderList.add((ClientOrder) as);
+		if (abstractSaleList != null) {
+			List<ClientOrder> clientOrderList = new ArrayList<>();
+			for (AbstractSale as : abstractSaleList) {
+				clientOrderList.add((ClientOrder) as);
+			}
+			return clientOrderList;
 		}
-		return clientOrderList;
+		return null;
 	}
 
 }

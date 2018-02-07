@@ -22,6 +22,7 @@ import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.service.impl.UserSecurityService;
 import org.afdemp.uisux.utility.SecurityUtility;
+import org.afdemp.uisux.utility.AbstractSaleUtility;
 import org.afdemp.uisux.utility.MailConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -167,10 +168,10 @@ public class HomeController {
 			}else {
 				model.addAttribute("clientAlreadyExistsFailure", true);
 			}
-			return "myProfile";
+			return "index";
 		}else if (userService.findByEmail(userEmail) != null) {
 			model.addAttribute("emailAlreadyExistsFailure", true);
-			return "myProfile";
+			return "index";
 		}
 		
 		User user = new User();
@@ -178,6 +179,7 @@ public class HomeController {
 		String password = SecurityUtility.randomPassword();
 		
 		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+		user.setUsername(username);
 		user.setPassword(encryptedPassword);
 		user.setEmail(userEmail);
 		
@@ -186,7 +188,7 @@ public class HomeController {
 		role.setName("ROLE_CLIENT");
 		Set<UserRole> userRoles = new HashSet<>();
 		userRoles.add(new UserRole(user, role));
-		userService.createUser(user, userRoles);
+		user = userService.createUser(user, userRoles);
 		String token = UUID.randomUUID().toString();
 		userService.createPasswordResetTokenForUser(user, token);
 
@@ -196,7 +198,8 @@ public class HomeController {
 		
 		mailSender.send(email);
 		model.addAttribute("emailSent", "true");
-		return "myProfile";
+
+		return "index";
 	}
 	
 }
