@@ -80,6 +80,6 @@ public class WishlistController {
 	@RequestMapping("/removeItem")
 	public String removeItem(@RequestParam("wishlistProductId") Long wishlistProductId) {
 		wishlistProductService.removeFromWishlist(wishlistProductService.findOne(wishlistProductId));
-		return "forward:/wishlist";
+		return "redirect:/wishlist/";
 	}
 }

@@ -45,8 +45,10 @@
 								<li><a th:href="@{/hours}">Syndicate hours &#38; Directions</a></li>
 								<li><a th:href="@{/faq}">FAQ</a></li>
 							<li><a th:href="@{/products/productShelf}">FAQ22</a></li>
-
-							</ul></li>
+							
+							</ul>
+							<li><a th:href="@{/products/productShelf}">GO SHOPPING</a></li>
+							</li>
 						<form class="navbar-form" th:action="@{/searchProduct}" method="post">
 							<div class="form-group">
 								<input type="text" name="keyword" class="form-control"
@@ -58,7 +60,7 @@
 					<ul class="nav navbar-nav navbar-right">
 						<li><a th:href="@{/shoppingCart/cart}">SHOPPING CART</a></li>
 						<li><a th:href="@{/wishlist/}">WISHLIST</a></li>
-						<li><a th:href="@{/products/productShelf}">PRODUCT SHELF</a></li>
+						
 						
 						<li><a sec:authorize="isAnonymous()" th:href="@{/login}">MY
 								ACCOUNT</a></li>
@@ -97,7 +99,7 @@
 							<i class="fa fa-phone"></i> Phone (greece) : +210 696 969 9697
 						</p>
 						<p>
-							<i class="fa fa-envelope"></i> E-mail : info@syndicatestore.com
+							<i class="fa fa-envelope"></i> E-mail : riggedalert@gmail.com
 						</p>
 					</ul>
 				</div>
