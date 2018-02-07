@@ -76,6 +76,30 @@ public class ProductController {
 		return "productDetail";
 	}
 	
+	@RequestMapping("/productDetail2")
+	public String productDetail(
+			@PathParam("id") Long id, @PathParam("addProductSuccess") boolean addProductSuccess, 
+			Model model, Principal principal
+			) {
+		if(principal != null) {
+			String username = principal.getName();
+			User user = userService.findByUsername(username);
+			model.addAttribute("user", user);
+		}
+		
+		Product product = productService.findOne(id);
+		
+		model.addAttribute("product", product);
+		model.addAttribute("addProductSuccess", addProductSuccess);
+		
+		List<Integer> qtyList = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+		
+		model.addAttribute("qtyList", qtyList);
+		model.addAttribute("qty", 1);
+		
+		return "productDetail";
+	}
+	
 	
 	
 	

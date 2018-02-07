@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CheckoutController {
@@ -63,7 +64,7 @@ public class CheckoutController {
 	@RequestMapping("/checkout")
 	public String checkout(@RequestParam("shoppingCartId") Long shoppingCartId,
 			@RequestParam(value = "missingRequiredField", required = false) boolean missingRequiredField, Model model,
-			Principal principal) {
+			Principal principal, RedirectAttributes redirectAttributes ) {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
@@ -73,16 +74,21 @@ public class CheckoutController {
 		}
 
 		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
-
+		boolean emptyCart = false;
+		boolean notEnoughStock = false;
 		if (cartItemList.size() == 0) {
-			model.addAttribute("emptyCart", true);
-			return "forward:/shoppintCart/cart";
+			emptyCart = true;
+			redirectAttributes.addAttribute("emptyCart", emptyCart);
+			redirectAttributes.addAttribute("notEnoughStock", notEnoughStock);
+			return "redirect:/shoppingCart/cart2";
 		}
 
 		for (CartItem cartItem : cartItemList) {
 			if (cartItem.getProduct().getInStockNumber() < cartItem.getQty()) {
-				model.addAttribute("notEnoughStock", true);
-				return "forward:/shoppingCart/cart";
+				notEnoughStock = true;
+				redirectAttributes.addAttribute("emptyCart", emptyCart);
+				redirectAttributes.addAttribute("notEnoughStock", notEnoughStock);
+				return "redirect:/shoppingCart/cart2";
 			}
 		}
 		

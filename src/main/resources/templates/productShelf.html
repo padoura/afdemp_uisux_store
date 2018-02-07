@@ -72,7 +72,7 @@
 						<td th:text="${product.listPrice}"></td>
 						<td th:text="${product.active}"></td>
 						
-						<td><form th:action="@{/shoppingCart/addItem(product=*{product},qty=${'1'})}" method="post">
+						<td><form th:action="@{/shoppingCart/addItem(id=${product.id},qty=${'1'})}" method="post">
     
     
     

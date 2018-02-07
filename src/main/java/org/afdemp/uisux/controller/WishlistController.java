@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/wishlist")
@@ -59,7 +60,7 @@ public class WishlistController {
 	@RequestMapping("/addItem")
 	public String addItem(
 			@ModelAttribute("product") Product product,
-			Model model, Principal principal
+			Model model, Principal principal, RedirectAttributes redirectAttributes
 			) {
 		
 		User user = userService.findByUsername(principal.getName());
@@ -67,13 +68,17 @@ public class WishlistController {
 		
 		product = productService.findOne(product.getId());
 		
+		boolean addProductSuccess;
+		
 		if (wishlistProductService.addToWishlist(userRole.getWishlist(), product)) {
-			model.addAttribute("addProductSuccess", true);
+			addProductSuccess = true;
+			redirectAttributes.addAttribute("addProductSuccess", addProductSuccess);
 		}else {
-			model.addAttribute("addProductFailure", true);
+			addProductSuccess = false;
+			redirectAttributes.addAttribute("addProductSuccess", addProductSuccess);
 		}
 		
-		return "redirect:/products/productDetail?id="+product.getId();
+		return "redirect:/products/productDetail2?id="+product.getId();
 	}
 	
 	
