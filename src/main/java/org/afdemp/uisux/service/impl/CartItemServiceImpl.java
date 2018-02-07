@@ -75,10 +75,9 @@ public class CartItemServiceImpl implements CartItemService{
 	
 
 	@Override
-	public boolean updateToCart(CartItem cartItem, int qty) {
-		
-		
-		return false;
+	public void updateToCart(CartItem cartItem, int qty) {
+		cartItem.setQty(qty);
+		cartItemRepository.save(cartItem);
 	}
 	
 	@Override

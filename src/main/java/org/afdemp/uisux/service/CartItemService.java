@@ -26,7 +26,7 @@ public interface CartItemService {
 
 	CartItem findById(Long cartItemId);
 
-	boolean updateToCart(CartItem cartItem, int qty);
+	void updateToCart(CartItem cartItem, int qty);
 
 	boolean removeCartItem(Long id);
 	
