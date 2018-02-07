@@ -165,6 +165,10 @@ public class CheckoutController {
 		System.out.println(billingAddress.getReceiverName());
 		System.out.println(billingAddress.getCity());
 		
+		billingAddress.setUserRole(userRole);
+		shippingAddress.setUserRole(userRole);
+		creditCard.setUserRole(userRole);
+		
 		billingAddress = addressService.createAddress(billingAddress);
 		shippingAddress = addressService.createAddress(shippingAddress);
 		creditCard = creditCardService.createCreditCard(creditCard);
