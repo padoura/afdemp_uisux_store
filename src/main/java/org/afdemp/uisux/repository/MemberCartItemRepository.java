@@ -21,6 +21,7 @@ public interface MemberCartItemRepository extends CrudRepository<MemberCartItem,
 	
 	MemberCartItem findOne(Long memberCartItemId);
 
+	@Transactional
 	int deleteByIdAndShoppingCartId(Long id, Long shoppingCartId);
 	
 	int deleteByShoppingCartId(Long shoppingCartId);

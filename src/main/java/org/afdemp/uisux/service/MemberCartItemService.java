@@ -1,5 +1,6 @@
 package org.afdemp.uisux.service;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.afdemp.uisux.domain.MemberCartItem;
@@ -29,5 +30,7 @@ public interface MemberCartItemService {
 	void deactivate(Long id);
 
 	List<MemberCartItem> findAll();
+	
+	HashSet<MemberCartItem> findByShoppingCart(ShoppingCart shoppingCart);
 	
 }

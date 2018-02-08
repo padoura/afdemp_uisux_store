@@ -2,6 +2,7 @@ package org.afdemp.uisux.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.afdemp.uisux.domain.AbstractSale;
@@ -10,6 +11,7 @@ import org.afdemp.uisux.domain.MemberSale;
 import org.afdemp.uisux.domain.Product;
 import org.afdemp.uisux.domain.ShoppingCart;
 import org.afdemp.uisux.repository.MemberCartItemRepository;
+import org.afdemp.uisux.repository.ShoppingCartRepository;
 import org.afdemp.uisux.service.AccountService;
 import org.afdemp.uisux.service.ClientOrderService;
 import org.afdemp.uisux.service.MemberCartItemService;
@@ -203,6 +205,11 @@ public class MemberCartItemServiceImpl implements MemberCartItemService{
 		}
 		LOG.info("\n\nFAILURE: Emptying the MemberShoppingCart {} failed miserably.");
 		return false;
+	}
+
+	@Override
+	public HashSet<MemberCartItem> findByShoppingCart(ShoppingCart shoppingCart) {
+		return memberCartItemRepository.findByShoppingCart(shoppingCart);
 	}
 	
 	
