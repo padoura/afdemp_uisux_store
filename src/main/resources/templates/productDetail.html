@@ -15,6 +15,10 @@
     			<a th:href="@{/products/productShelf}">Back to product list</a><br/>
     			<img class="img-responsive shelf-book" th:src="#{adminPath}+@{/image/product/}+${product.id}+'.png'" />
      		</div>
+     			<!-- <div class="col-xs-6 text-right">
+						<a class="btn btn-primary"
+							th:href="@{/checkout(shoppingCartId=${shoppingCart.id})}">Check Out</a>
+					</div> -->
     		
     		<div class="col-xs-9">
     		<div id="success">	
