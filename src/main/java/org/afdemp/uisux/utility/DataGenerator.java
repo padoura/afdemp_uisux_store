@@ -397,17 +397,17 @@ public class DataGenerator {
 	
 	public void generate() throws Exception 
 	{
-	insertFirstAdmin();
-	insertSomeCategories();
-	insertExampleProduct();
-	updateExampleProduct();
-	insertExampleMember();
-	insertProductAndAddToCartExample();
-	createMemberCartItemForTesting(300, "Madryoch");
-	createMemberCartItemForTesting(300, "member");
-	makeAllMemberCartItemsVisible();
-	
-	accountService.findAdminAccount();
+//	insertFirstAdmin();
+//	insertSomeCategories();
+//	insertExampleProduct();
+//	updateExampleProduct();
+//	insertExampleMember();
+//	insertProductAndAddToCartExample();
+//	createMemberCartItemForTesting(300, "Madryoch");
+//	createMemberCartItemForTesting(300, "member");
+//	makeAllMemberCartItemsVisible();
+//	
+//	accountService.findAdminAccount();
 	}
 
 }

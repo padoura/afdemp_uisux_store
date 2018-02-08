@@ -166,7 +166,8 @@ public class CartItemServiceImpl implements CartItemService{
 			clientOrder.setShippingAddress(shippingAddress);
 			clientOrder.setShippingMethod(shippingMethod);
 			clientOrder.setCreditCard(creditCard);
-			abstractSale=clientOrderService.createClientOrder(clientOrder);
+			clientOrder=clientOrderService.createClientOrder(clientOrder);
+			abstractSale=clientOrder;
 			for(CartItem ci: itemsInCart)
 			{
 				ci.setShoppingCart(null);
