@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.afdemp.uisux.domain.AbstractSale;
+import org.afdemp.uisux.domain.CartItem;
 import org.afdemp.uisux.domain.ClientOrder;
 import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.repository.ClientOrderRepository;
@@ -45,12 +47,15 @@ public class ClientOrderServiceImpl implements ClientOrderService{
 	public ClientOrder createClientOrder(ClientOrder clientOrder)
 	{
 		
-		Date submittedDate=Date.valueOf(LocalDate.now());
-		clientOrder.setSubmittedDate(submittedDate);
+		
+		clientOrder.setSubmittedDate(Timestamp.valueOf(LocalDateTime.now()));
 		clientOrder.setOrderStatus("Processing");
 		
 		clientOrderRepository.save(clientOrder);
 		return(clientOrder);
+		
+		
+		
 	}
 	
 	@Override
@@ -143,7 +148,7 @@ public class ClientOrderServiceImpl implements ClientOrderService{
 		ClientOrder clientOrder=clientOrderRepository.findOne(clientOrderId);
 		if (divisor!=0)
 		{
-			BigDecimal amount=clientOrder.getTotal().divide(BigDecimal.valueOf(2)).divide(BigDecimal.valueOf(divisor));
+			BigDecimal amount=clientOrder.getTotal().divide(BigDecimal.valueOf(divisor*2), 2,  BigDecimal.ROUND_HALF_UP);
 			for(UserRole usr:members)
 			{
 				transactionService.twoWayTransaction(amount, accountService.findAdminAccount(), usr.getAccount(), clientOrder);
@@ -163,5 +168,5 @@ public class ClientOrderServiceImpl implements ClientOrderService{
 	public List<ClientOrder> findByUserRole(UserRole userRole) {
 		return clientOrderRepository.findByUserRole(userRole);
 	}
-
+	
 }
