@@ -44,13 +44,12 @@
 				<thead>
 					<tr>
 						<th>Product Name</th>
-						<th>id</th>
-						<th>our Price</th>
+						<th>ID</th>
+						<th>Our Price (&euro;)</th>
 						<th>Category</th>
-						<th>description</th>
-						<th>list Price</th>
-						<th>cart</th>
-						<th>wishlist</th>
+						<th>Description</th>
+						<th>Add to Cart</th>
+						<th>Add to Wishlist</th>
 						
 					</tr>
 				</thead>
@@ -62,7 +61,6 @@
 						<td th:text="${product.ourPrice}"></td>
 					<td th:text="${product.category.type}"></td>
 						<td th:text="${product.description}"></td>
-						<td th:text="${product.listPrice}"></td>
 						
 						<td><form th:action="@{/shoppingCart/addItem(id=${product.id},qty=${'1'})}" method="post">
     
