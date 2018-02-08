@@ -193,7 +193,7 @@ public class CheckoutController {
 		System.out.println(billingAddress.getCity());
 		mailSender.send(mailConstructor.constructOrderConfirmationEmail(user, clientOrder, Locale.ENGLISH));
 		
-		cartItemService.emptyCart(shoppingCart.getId());
+		
 		
 		LocalDate today = LocalDate.now();
 		LocalDate estimatedDeliveryDate;
