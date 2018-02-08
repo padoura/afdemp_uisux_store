@@ -200,6 +200,10 @@ public class CheckoutController {
 		creditCard = creditCardService.createCreditCard(creditCard);
 		
 		
+		System.out.println("6 --- " + billingAddress.getReceiverName() + " -----------------------------");
+		System.out.println("6 --- " + shippingAddress.getReceiverName() + " -----------------------------");
+		
+		
 		
 		ClientOrder clientOrder = cartItemService.commitAndGetSale(shoppingCart, creditCard, billingAddress, shippingAddress, shippingMethod);
 		
