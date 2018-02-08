@@ -264,13 +264,14 @@
 
 
 									<!-- Billing Address -->
-									<div class="checkbox">
+									<input hidden="hidden" id="theSameAsShippingAddress" name="billingSameAsShipping" value="true" />
+									<!-- <div class="checkbox">
 										<label> <input id="theSameAsShippingAddress"
 											type="checkbox" name="billingSameAsShipping" value="true" />
 											The same as shipping address
 										</label>
-									</div>
-									
+									</div> -->
+									<!-- 
 									<div class="form-group">
 										<label for="billingAddress">* Street Address</label> <input
 											type="text" class="form-control billingAddress" id="billingAddress"
@@ -282,12 +283,6 @@
 											th:name="street2"
 											th:value="${billingAddress.street2}" />
 									</div>
-									<div class="form-group">
-										<label for="receiverName">* Receiver Name</label> <input type="text"
-											class="form-control billingAddress" id="receiverName"
-											placeholder="Receiver Name" name="receiverName"
-											th:value="${billingAddress.receiverName}" />
-									</div> 
 
 									<div class="row">
 										<div class="col-xs-4">
@@ -318,7 +313,7 @@
 											</div>
 										</div>
 									</div>
-
+ -->
 									<a data-toggle="collapse" data-parent="#accordion"
 										class="btn btn-warning pull-right" href="#reviewItems">Next</a>
 								</div>
