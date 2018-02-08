@@ -366,7 +366,7 @@ public class ProfileController {
 		
 		Address shippingAddress = addressService.findById(shippingAddressId);
 		
-		if(userRole.getUserRoleId() != shippingAddress.getUserRole().getUser().getId()) {
+		if(userRole.getUserRoleId() != shippingAddress.getUserRole().getUserRoleId()) {
 			return "badRequestPage";
 		} else {
 			model.addAttribute("user", user);
@@ -395,7 +395,7 @@ public class ProfileController {
 		
 		ClientOrder clientOrder = clientOrderService.findOne(clientOrderId);
 		
-		if(userRole.getUserRoleId() != clientOrder.getUserRole().getUser().getId()) {
+		if(userRole.getUserRoleId() != clientOrder.getUserRole().getUserRoleId()) {
 			return "badRequestPage";
 		} else {
 			List<CartItem> cartItemList = cartItemService.findByClientOrder(clientOrder);
@@ -406,7 +406,7 @@ public class ProfileController {
 			
 			model.addAttribute("userCreditCartList", userRole.getCreditCardList());
 			model.addAttribute("userShippingAddressList", userRole.getUserShippingAddressList());
-			model.addAttribute("clientOrderList", AbstractSaleUtility.castToClientList(userRole.getAbstractSaleList()));
+			model.addAttribute("clientOrderList", userRole.getAbstractSaleList());
 			
 			Address shippingAddress = new Address();
 			model.addAttribute("shippingAddress", shippingAddress);

@@ -159,4 +159,9 @@ public class ClientOrderServiceImpl implements ClientOrderService{
 		return clientOrderRepository.findOne(id);
 	}
 
+	@Override
+	public List<ClientOrder> findByUserRole(UserRole userRole) {
+		return clientOrderRepository.findByUserRole(userRole);
+	}
+
 }

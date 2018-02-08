@@ -68,6 +68,12 @@ public class CheckoutController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
+		
+		
+		currentShippingAddress = new Address();
+		currentBillingAddress = new Address();
+		currentCreditCard = new CreditCard();
+		
 
 		if (shoppingCartId != shoppingCart.getId()) {
 			return "badRequestPage";
@@ -129,6 +135,9 @@ public class CheckoutController {
 				addressService.deepCopyAddress(cc.getBillingAddress(), this.currentBillingAddress);
 			}
 		}
+		
+		System.out.println("1 --- " + this.currentBillingAddress.getReceiverName() + " -----------------------------");
+		System.out.println("1 --- " + this.currentShippingAddress.getReceiverName() + " -----------------------------");
 
 		model.addAttribute("shippingAddress", currentShippingAddress);
 		model.addAttribute("creditCard", currentCreditCard);
@@ -154,6 +163,9 @@ public class CheckoutController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
+		
+		System.out.println("4 --- " + billingAddress.getReceiverName() + " -----------------------------");
+		System.out.println("4 --- " + shippingAddress.getReceiverName() + " -----------------------------");
 
 		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 		model.addAttribute("cartItemList", cartItemList);
@@ -177,6 +189,9 @@ public class CheckoutController {
 		shippingAddress.setUserRole(userRole);
 		creditCard.setUserRole(userRole);
 		
+		System.out.println("5 --- " + billingAddress.getReceiverName() + " -----------------------------");
+		System.out.println("5 --- " + shippingAddress.getReceiverName() + " -----------------------------");
+		
 		
 		billingAddress = addressService.createAddress(billingAddress);
 		creditCard.setBillingAddress(billingAddress);
@@ -188,9 +203,6 @@ public class CheckoutController {
 		
 		ClientOrder clientOrder = cartItemService.commitAndGetSale(shoppingCart, creditCard, billingAddress, shippingAddress, shippingMethod);
 		
-		System.out.println(shippingAddress.getReceiverName());
-		System.out.println(billingAddress.getReceiverName());
-		System.out.println(billingAddress.getCity());
 		mailSender.send(mailConstructor.constructOrderConfirmationEmail(user, clientOrder, Locale.ENGLISH));
 		
 		
@@ -224,6 +236,9 @@ public class CheckoutController {
 			addressService.deepCopyAddress(shippingAddress, currentShippingAddress);
 
 			HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
+			
+			System.out.println("2 --- " + currentBillingAddress.getReceiverName() + " -----------------------------");
+			System.out.println("2 --- " + currentShippingAddress.getReceiverName() + " -----------------------------");
 
 			model.addAttribute("shippingAddress", currentShippingAddress);
 			model.addAttribute("creditCard", currentCreditCard);
@@ -261,7 +276,7 @@ public class CheckoutController {
 		CreditCard creditCard = creditCardService.findById(creditCardId);
 		Address billingAddress = creditCard.getBillingAddress();
 
-		if (creditCard.getUserRole().getUser().getId() != user.getId()) {
+		if (creditCard.getUserRole().getUserRoleId() != userRole.getUserRoleId()) {
 			return "badRequestPage";
 		} else {
 			creditCardService.deepCopyCreditCard(creditCard, this.currentCreditCard);
@@ -275,6 +290,9 @@ public class CheckoutController {
 			model.addAttribute("billingAddress", this.currentBillingAddress);
 			model.addAttribute("cartItemList", cartItemList);
 			model.addAttribute("shoppingCart", shoppingCart);
+			
+			System.out.println("3 --- " + currentBillingAddress.getReceiverName() + " -----------------------------");
+			System.out.println("3 --- " + currentShippingAddress.getReceiverName() + " -----------------------------");
 
 			List<Address> shippingAddressList = userRole.getUserShippingAddressList();
 			List<CreditCard> creditCardList = userRole.getCreditCardList();

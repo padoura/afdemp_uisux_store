@@ -32,25 +32,26 @@ public class AddressServiceImpl implements AddressService{
 			Address tempAddress=addressRepository.findByIdAndUserRole(address.getId(),address.getUserRole());
 			if(tempAddress==null) 
 			{
-				tempAddress = new Address();
-				tempAddress.setReceiverName(address.getReceiverName());
-				tempAddress.setStreet1(address.getStreet1());
-				tempAddress.setStreet2(address.getStreet2());
-				tempAddress.setCity(address.getCity());
-				tempAddress.setState(address.getState());
-				tempAddress.setCountry(address.getCountry());
-				tempAddress.setZipcode(address.getZipcode());
-				tempAddress.setUserRole(address.getUserRole());
-				tempAddress=addressRepository.save(tempAddress);
-				LOG.info("SUCCESS: Address Succesfully Added!!");
+				tempAddress = addressRepository.findByReceiverNameAndStreet1AndCityAndZipcodeAndUserRole(address.getReceiverName(), address.getStreet1(), address.getCity(), address.getZipcode(), address.getUserRole());
+				if (tempAddress==null) {
+					tempAddress = new Address();
+					tempAddress.setReceiverName(address.getReceiverName());
+					tempAddress.setStreet1(address.getStreet1());
+					tempAddress.setStreet2(address.getStreet2());
+					tempAddress.setCity(address.getCity());
+					tempAddress.setState(address.getState());
+					tempAddress.setCountry(address.getCountry());
+					tempAddress.setZipcode(address.getZipcode());
+					tempAddress.setUserRole(address.getUserRole());
+					tempAddress=addressRepository.save(tempAddress);
+					LOG.info("SUCCESS: Address Succesfully Added!!");
+				}
 			}else {
 				deepCopyAddress(address, tempAddress);
 				tempAddress=addressRepository.save(tempAddress);
+				LOG.info("SUCCESS: Address Succesfully Modified!!");
 			}
-			
 			return tempAddress;
-			
-			
 		}
 		
 	}

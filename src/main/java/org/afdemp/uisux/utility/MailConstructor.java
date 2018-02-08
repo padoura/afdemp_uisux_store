@@ -50,8 +50,6 @@ public class MailConstructor {
 		context.setVariable("cartItemList", cartItemService.findByAbstractSale(clientOrder));
 		String text = templateEngine.process("orderConfirmationEmailTemplate", context);
 		
-		System.out.println(clientOrder.getCartItemList().get(0).getQty() + "    -------------------");
-		
 		MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {

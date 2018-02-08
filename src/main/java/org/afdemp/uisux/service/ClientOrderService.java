@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.afdemp.uisux.domain.AbstractSale;
 import org.afdemp.uisux.domain.ClientOrder;
+import org.afdemp.uisux.domain.security.UserRole;
 
 public interface ClientOrderService {
 
@@ -26,5 +27,7 @@ public interface ClientOrderService {
 	void distributeEarningsToAllMembers(Long clientOrderId);
 
 	ClientOrder findOne(Long l);
+
+	List<ClientOrder> findByUserRole(UserRole userRole);
 
 }

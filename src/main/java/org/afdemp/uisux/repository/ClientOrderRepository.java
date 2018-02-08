@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.afdemp.uisux.domain.ClientOrder;
 import org.afdemp.uisux.domain.Product;
+import org.afdemp.uisux.domain.security.UserRole;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +18,8 @@ public interface ClientOrderRepository extends CrudRepository<ClientOrder, Long>
     List<ClientOrder> findOrdersFromTo(@Param("from") Timestamp from, @Param("to") Timestamp to);
 	
 	List<ClientOrder> findByDistributedFalse();
+
+	List<ClientOrder> findByUserRole(UserRole userRole);
 	
 	
 }
