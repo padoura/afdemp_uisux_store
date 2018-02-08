@@ -70,9 +70,9 @@ public class CheckoutController {
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
 		
 		
-		currentShippingAddress = new Address();
-		currentBillingAddress = new Address();
-		currentCreditCard = new CreditCard();
+//		currentShippingAddress = new Address();
+//		currentBillingAddress = new Address();
+//		currentCreditCard = new CreditCard();
 		
 
 		if (shoppingCartId != shoppingCart.getId()) {
@@ -136,14 +136,16 @@ public class CheckoutController {
 			}
 		}
 		
-		System.out.println("1 --- " + this.currentBillingAddress.getReceiverName() + " -----------------------------");
-		System.out.println("1 --- " + this.currentShippingAddress.getReceiverName() + " -----------------------------");
+
 
 		model.addAttribute("shippingAddress", currentShippingAddress);
 		model.addAttribute("creditCard", currentCreditCard);
 		model.addAttribute("billingAddress", currentBillingAddress);
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", shoppingCart);
+		
+		System.out.println("1 --- " + this.currentBillingAddress.getReceiverName() + " ----------------------------- " + (this.currentBillingAddress==this.currentShippingAddress));
+		System.out.println("1 --- " + this.currentShippingAddress.getReceiverName() + " -----------------------------");
 
 		model.addAttribute("classActiveShipping", true);
 
@@ -164,7 +166,7 @@ public class CheckoutController {
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
 		
-		System.out.println("4 --- " + billingAddress.getReceiverName() + " -----------------------------");
+		System.out.println("4 --- " + billingAddress.getReceiverName() + " ----------------------------- " + (billingAddress==shippingAddress));
 		System.out.println("4 --- " + shippingAddress.getReceiverName() + " -----------------------------");
 
 		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
@@ -189,7 +191,7 @@ public class CheckoutController {
 		shippingAddress.setUserRole(userRole);
 		creditCard.setUserRole(userRole);
 		
-		System.out.println("5 --- " + billingAddress.getReceiverName() + " -----------------------------");
+		System.out.println("5 --- " + billingAddress.getReceiverName() + " ----------------------------- " + (billingAddress==shippingAddress));
 		System.out.println("5 --- " + shippingAddress.getReceiverName() + " -----------------------------");
 		
 		
@@ -200,7 +202,7 @@ public class CheckoutController {
 		creditCard = creditCardService.createCreditCard(creditCard);
 		
 		
-		System.out.println("6 --- " + billingAddress.getReceiverName() + " -----------------------------");
+		System.out.println("6 --- " + billingAddress.getReceiverName() + " ----------------------------- " + (billingAddress==shippingAddress));
 		System.out.println("6 --- " + shippingAddress.getReceiverName() + " -----------------------------");
 		
 		
@@ -241,7 +243,7 @@ public class CheckoutController {
 
 			HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 			
-			System.out.println("2 --- " + currentBillingAddress.getReceiverName() + " -----------------------------");
+			System.out.println("2 --- " + currentBillingAddress.getReceiverName() + " ----------------------------- " + (this.currentBillingAddress==this.currentShippingAddress));
 			System.out.println("2 --- " + currentShippingAddress.getReceiverName() + " -----------------------------");
 
 			model.addAttribute("shippingAddress", currentShippingAddress);
@@ -295,7 +297,7 @@ public class CheckoutController {
 			model.addAttribute("cartItemList", cartItemList);
 			model.addAttribute("shoppingCart", shoppingCart);
 			
-			System.out.println("3 --- " + currentBillingAddress.getReceiverName() + " -----------------------------");
+			System.out.println("3 --- " + currentBillingAddress.getReceiverName() + " ----------------------------- " + (this.currentBillingAddress==this.currentShippingAddress));
 			System.out.println("3 --- " + currentShippingAddress.getReceiverName() + " -----------------------------");
 
 			List<Address> shippingAddressList = userRole.getUserShippingAddressList();
