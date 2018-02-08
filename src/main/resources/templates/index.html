@@ -5,7 +5,9 @@
 
 <body>
 	<div th:replace="common/header2 :: navbar" />
+	<div id="success" >
 	<h3><span th:if="${productsAvailable}" style="color: red"><i class="fa fa-check" aria-hidden="true" style="color: red"></i>Products in your wishlist are on sale!</span></h3>
+	</div>
 	<div class="container">
 		<div class="row banner">
 			<!-- carousel -->
@@ -156,5 +158,22 @@
 
 <div th:replace="common/header2 :: footer"/>
 	<div th:replace="common/header2 :: body-bottom-scripts" />
+	
+	
+	<script th:inline="javascript" >
+
+$(document).ready(function(){
+	
+var delayInMilliseconds = 4000; //1 second
+
+setTimeout(function() {
+	$("#success").remove();
+  //your code to be executed after 1 second
+}, delayInMilliseconds);
+});
+
+</script>
+	
+	
 </body>
 </html>

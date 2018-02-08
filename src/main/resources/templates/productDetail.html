@@ -17,8 +17,10 @@
      		</div>
     		
     		<div class="col-xs-9">
-    			<h3><span th:if="${addProductSuccess}" style="color: forestgreen"><i class="fa fa-check" aria-hidden="true" style="color: forestgreen"></i>Product Successfully Added!</span></h3>
+    		<div id="success">	
+    		<h3><span th:if="${addProductSuccess}" style="color: forestgreen"><i class="fa fa-check" aria-hidden="true" style="color: forestgreen"></i>Product Successfully Added!</span></h3>
     			<h3><span th:if="${notEnoughStock}" style="color: red">Oops, only <span th:text="${product.inStockNumber}"></span> In Stock.</span></h3>
+    			</div>
     				<div class="col-xs-9">
 				<h3 th:text="${product.name}"></h3>
 				<div class="row">
@@ -82,5 +84,21 @@
 <div th:replace="common/header2 :: footer"/>
 
 <div th:replace="common/header2 :: body-bottom-scripts"/>
+
+	<script th:inline="javascript" >
+
+$(document).ready(function(){
+	
+var delayInMilliseconds = 4000; //1 second
+
+setTimeout(function() {
+	$("#success").remove();
+  //your code to be executed after 1 second
+}, delayInMilliseconds);
+});
+
+</script>
+
+
 </body>
 </html>
