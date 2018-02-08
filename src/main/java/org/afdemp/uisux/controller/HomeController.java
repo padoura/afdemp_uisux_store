@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.afdemp.uisux.domain.User;
+import org.afdemp.uisux.domain.Wishlist;
 import org.afdemp.uisux.domain.security.PasswordResetToken;
 import org.afdemp.uisux.domain.security.Role;
 import org.afdemp.uisux.domain.security.UserRole;
@@ -22,6 +23,7 @@ import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.service.impl.UserSecurityService;
 import org.afdemp.uisux.utility.SecurityUtility;
+import org.afdemp.uisux.utility.WishlistUtility;
 import org.afdemp.uisux.utility.AbstractSaleUtility;
 import org.afdemp.uisux.utility.MailConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +65,19 @@ public class HomeController {
 	private UserRoleService userRoleService;
 
 	@RequestMapping("/")
-	public String index(){
+	public String index(Principal principal, Model model){
+		if (principal != null) {
+			User user = userService.findByUsername(principal.getName());
+			UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
+			Wishlist wishlist = userRole.getWishlist();
+			List<Product> productList = WishlistUtility.getProductList(wishlist);
+			for (Product p : productList) {
+				if (p.getInStockNumber() > 0 && p.isActive()) {
+					model.addAttribute("productsAvailable", true);
+					break;
+				}
+			}
+		}
 		return "index";
 	}
 	
