@@ -40,7 +40,7 @@
 							<div class="row">
 								<div class="col-xs-7 text-left">Total price:</div>
 								<div class="col-xs-5 text-right">
-									$<span th:text="${shoppingCart.grandTotal}"></span>
+									&euro;<span th:text="${shoppingCart.grandTotal}"></span>
 								</div>
 							</div>
 							
@@ -197,7 +197,7 @@
 											<div class="form-group">
 												<label for="cardNumber">* Card Number:</label>
 												<div class="input-group">
-													<input type="tel" class="form-control" id="cardNumber"
+													<input type="number" min="0" class="form-control" id="cardNumber"
 														required="required" placeHolder="Valid Card Number"
 														th:name="cardNumber" th:value="${creditCard.cardNumber}" />
 													<span class="input-group-addon"><i
@@ -255,7 +255,7 @@
 										<div class="col-xs-5">
 											<div class="form-group">
 												<label for="cardCVC">CV Code</label> <input id="cardCVC"
-													type="tel" class="form-control" name="cvc"
+													type="number" min="0" class="form-control" name="cvc"
 													placeholder="CVC" th:name="cvc"
 													th:value="${creditCard.cvc}" />
 											</div>

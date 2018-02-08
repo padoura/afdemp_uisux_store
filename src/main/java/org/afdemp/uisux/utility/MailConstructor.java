@@ -16,6 +16,7 @@ import org.thymeleaf.context.Context;
 
 import org.afdemp.uisux.domain.ClientOrder;
 import org.afdemp.uisux.domain.User;
+import org.afdemp.uisux.service.CartItemService;
 
 @Component
 public class MailConstructor {
@@ -24,6 +25,9 @@ public class MailConstructor {
 	
 	@Autowired
 	private TemplateEngine templateEngine;
+
+	@Autowired
+	private CartItemService cartItemService;
 	
 	public SimpleMailMessage constructResetTokenEmail(
 			String contextPath, Locale locale, String token, User user, String password
@@ -43,7 +47,7 @@ public class MailConstructor {
 		Context context = new Context();
 		context.setVariable("order", clientOrder);
 		context.setVariable("user", user);
-		context.setVariable("cartItemList", clientOrder.getCartItemList());
+		context.setVariable("cartItemList", cartItemService.findByAbstractSale(clientOrder));
 		String text = templateEngine.process("orderConfirmationEmailTemplate", context);
 		
 		System.out.println(clientOrder.getCartItemList().get(0).getQty() + "    -------------------");

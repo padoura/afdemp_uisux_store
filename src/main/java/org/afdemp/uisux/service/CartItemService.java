@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 
+import org.afdemp.uisux.domain.AbstractSale;
 import org.afdemp.uisux.domain.Address;
 import org.afdemp.uisux.domain.CartItem;
 import org.afdemp.uisux.domain.ClientOrder;
@@ -32,6 +33,8 @@ public interface CartItemService {
 	boolean removeCartItem(Long id);
 	
 	BigDecimal getGrandTotal(ShoppingCart shoppingCart);
+
+	List<CartItem> findByAbstractSale(AbstractSale abstractSale);
 	
 	
 }

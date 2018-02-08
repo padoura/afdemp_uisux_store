@@ -241,5 +241,11 @@ public class CartItemServiceImpl implements CartItemService{
 	public CartItem findById(Long cartItemId) {
 		return cartItemRepository.findOne(cartItemId);
 	}
+
+
+	@Override
+	public List<CartItem> findByAbstractSale(AbstractSale abstractSale) {
+		return cartItemRepository.findByAbstractSale(abstractSale);
+	}
 	
 }
