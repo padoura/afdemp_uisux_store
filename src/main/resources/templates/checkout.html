@@ -92,20 +92,20 @@
 								 	<div class="form-group">
 										<label for="receiverName">* Holder Name</label> <input type="text"
 											class="form-control" id="receiverName"
-											placeholder="Receiver Name" name="receiverName"
-											th:value="${shippingAddress.receiverName}" />
+											placeholder="Receiver Name" name="shippingAddress.receiverName"
+											th:value="${wrapper.shippingAddress.receiverName}" />
 									</div> 
 
 									<div class="form-group">
 										<label for="street1">* Street Address</label> <input
 											type="text" class="form-control" id="street1"
-											placeholder="Street Address 1" name="street1"
-											th:value="${shippingAddress.street1}" />
+											placeholder="Street Address 1" name="shippingAddress.street1"
+											th:value="${wrapper.shippingAddress.street1}" />
 									</div>
 									<div class="form-group">
 										<input type="text" class="form-control"
-											placeholder="Street Address 2" name="street2"
-											th:value="${shippingAddress.street2}" />
+											placeholder="Street Address 2" name="shippingAddress.street2"
+											th:value="${wrapper.shippingAddress.street2}" />
 									</div>
 
 									<div class="row">
@@ -113,18 +113,18 @@
 											<div class="form-group">
 												<label for="city">* City</label> <input type="text"
 													class="form-control" id="city"
-													placeholder="Shipping City" th:name="city"
+													placeholder="Shipping City" th:name="shippingAddress.city"
 													required="required"
-													th:value="${shippingAddress.city}" />
+													th:value="${wrapper.shippingAddress.city}" />
 											</div>
 										</div>
 										<div class="col-xs-4">
 											<div class="form-group">
 												<label for="city">* State</label> <input type="text"
 													class="form-control" id="state"
-													placeholder="state" th:name="state"
+													placeholder="state" th:name="shippingAddress.state"
 													required="required"
-													th:value="${shippingAddress.state}" />
+													th:value="${wrapper.shippingAddress.state}" />
 											</div>
 										</div>
 										
@@ -133,8 +133,8 @@
 												<label for="zipcode">* Zipcode</label> <input
 													type="text" class="form-control" id="zipcode"
 													placeholder="Shipping Zipcode"
-													th:name="zipcode" required="required"
-													th:value="${shippingAddress.zipcode}" />
+													th:name="shippingAddress.zipcode" required="required"
+													th:value="${wrapper.shippingAddress.zipcode}" />
 											</div>
 										</div>
 									</div>
@@ -264,43 +264,48 @@
 
 
 									<!-- Billing Address -->
-									<input hidden="hidden" id="theSameAsShippingAddress" name="billingSameAsShipping" value="true" />
-									<!-- <div class="checkbox">
+									<div class="checkbox">
 										<label> <input id="theSameAsShippingAddress"
 											type="checkbox" name="billingSameAsShipping" value="true" />
 											The same as shipping address
 										</label>
-									</div> -->
-									<!-- 
+									</div>
+									
 									<div class="form-group">
 										<label for="billingAddress">* Street Address</label> <input
 											type="text" class="form-control billingAddress" id="billingAddress"
 											placeholder="Street Address 1"
-											th:name="street1" required="required"
-											th:value="${billingAddress.street1}" /> <input
+											th:name="billingAddress.street1" required="required"
+											th:value="${wrapper.billingAddress.street1}" /> <input
 											type="text" class="form-control billingAddress" id="billingAddress"
 											placeholder="Street Address 2"
-											th:name="street2"
-											th:value="${billingAddress.street2}" />
+											th:name="billingAddress.street2"
+											th:value="${wrapper.billingAddress.street2}" />
 									</div>
+									<div class="form-group">
+										<label for="receiverName">* Receiver Name</label> <input type="text"
+											class="form-control billingAddress" id="receiverName"
+											placeholder="Receiver Name" name="billingAddress.receiverName"
+											th:value="${wrapper.billingAddress.receiverName}" />
+									</div> 
 
 									<div class="row">
 										<div class="col-xs-4">
 											<div class="form-group">
 												<label for="bcity">* City</label> <input type="text"
 													class="form-control billingAddress" id="bcity"
-													placeholder="Billing city" th:name="city"
+													placeholder="Billing city" th:name="billingAddress.city"
 													required="required"
-													th:value="${billingAddress.city}" />
+													th:value="${wrapper.billingAddress.city}" />
 											</div>
 										</div>
 										<div class="col-xs-4">
 											<div class="form-group">
 												<label for="Bstate">* State</label> <input type="text"
 													class="form-control billingAddress" id="Bstate"
-													placeholder="Billing ST" th:name="state"
+													placeholder="Billing ST" th:name="billingAddress.state"
 													required="required"
-													th:value="${billingAddress.state}" />
+													th:value="${wrapper.billingAddress.state}" />
 											</div>
 										</div>
 										<div class="col-xs-4">
@@ -308,12 +313,12 @@
 												<label for="billingZipcode">* Zipcode</label> <input
 													type="text" class="form-control billingAddress" id="billingZipcode"
 													placeholder="Billing Zipcode"
-													th:name="zipcode" required="required"
-													th:value="${billingAddress.zipcode}" />
+													th:name="billingAddress.zipcode" required="required"
+													th:value="${wrapper.billingAddress.zipcode}" />
 											</div>
 										</div>
 									</div>
- -->
+
 									<a data-toggle="collapse" data-parent="#accordion"
 										class="btn btn-warning pull-right" href="#reviewItems">Next</a>
 								</div>

@@ -19,6 +19,7 @@ import org.afdemp.uisux.service.CreditCardService;
 import org.afdemp.uisux.service.ShoppingCartService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
+import org.afdemp.uisux.utility.AddressCheckoutFormWrapper;
 import org.afdemp.uisux.utility.MailConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,8 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class CheckoutController {
 
-	private Address currentShippingAddress = new Address();
-	private Address currentBillingAddress = new Address();
+	private AddressCheckoutFormWrapper wrapper  = new AddressCheckoutFormWrapper();
 	private CreditCard currentCreditCard = new CreditCard();
 
 	@Autowired
@@ -68,11 +68,6 @@ public class CheckoutController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
-		
-		
-		currentShippingAddress = new Address();
-		currentBillingAddress = new Address();
-		currentCreditCard = new CreditCard();
 		
 
 		if (shoppingCartId != shoppingCart.getId()) {
@@ -125,22 +120,20 @@ public class CheckoutController {
 
 		for (Address ad : shippingAddressList) {
 			if (ad.isUserShippingDefault()) {
-				addressService.deepCopyAddress(ad, this.currentShippingAddress);
+				addressService.deepCopyAddress(ad, this.wrapper.getShippingAddress());
 			}
 		}
 
 		for (CreditCard cc : creditCardList) {
 			if (cc.isDefaultCreditCard()) {
 				creditCardService.deepCopyCreditCard(cc, this.currentCreditCard);
-				addressService.deepCopyAddress(cc.getBillingAddress(), this.currentBillingAddress);
+				addressService.deepCopyAddress(cc.getBillingAddress(), this.wrapper.getBillingAddress());
 			}
 		}
 		
 
-
-		model.addAttribute("shippingAddress", currentShippingAddress);
+		model.addAttribute("wrapper", wrapper);
 		model.addAttribute("creditCard", currentCreditCard);
-		model.addAttribute("billingAddress", currentBillingAddress);
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("shoppingCart", shoppingCart);
 
@@ -155,8 +148,8 @@ public class CheckoutController {
 	}
 
 	@RequestMapping(value = "/checkout", method = RequestMethod.POST)
-	public String checkoutPost(@ModelAttribute("shippingAddress") Address shippingAddress,
-			@ModelAttribute("billingAddress") Address billingAddress, @ModelAttribute("creditCard") CreditCard creditCard,
+	public String checkoutPost(@ModelAttribute("wrapper") AddressCheckoutFormWrapper wrapper,
+			@ModelAttribute("creditCard") CreditCard creditCard,
 			@ModelAttribute("billingSameAsShipping") String billingSameAsShipping,
 			@ModelAttribute("shippingMethod") String shippingMethod, Principal principal, Model model) {
 		User user = userService.findByUsername(principal.getName());
@@ -226,13 +219,12 @@ public class CheckoutController {
 		if (shippingAddress.getUserRole().getUser().getId() != user.getId()) {
 			return "badRequestPage";
 		} else {
-			addressService.deepCopyAddress(shippingAddress, currentShippingAddress);
+			addressService.deepCopyAddress(shippingAddress, this.wrapper.getShippingAddress());
 
 			HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 
-			model.addAttribute("shippingAddress", currentShippingAddress);
+			model.addAttribute("wrapper", wrapper);
 			model.addAttribute("creditCard", currentCreditCard);
-			model.addAttribute("billingAddress", currentBillingAddress);
 			model.addAttribute("cartItemList", cartItemList);
 			model.addAttribute("shoppingCart", shoppingCart);
 
@@ -273,11 +265,10 @@ public class CheckoutController {
 
 			HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 
-			addressService.deepCopyAddress(billingAddress, currentBillingAddress);
+			addressService.deepCopyAddress(billingAddress, this.wrapper.getBillingAddress());
 
-			model.addAttribute("shippingAddress", this.currentShippingAddress);
+			model.addAttribute("wrapper", wrapper);			
 			model.addAttribute("creditCard", this.currentCreditCard);
-			model.addAttribute("billingAddress", this.currentBillingAddress);
 			model.addAttribute("cartItemList", cartItemList);
 			model.addAttribute("shoppingCart", shoppingCart);
 
