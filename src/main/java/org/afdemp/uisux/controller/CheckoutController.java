@@ -155,6 +155,9 @@ public class CheckoutController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_CLIENT");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
+		
+		Address billingAddress = wrapper.getBillingAddress();
+		Address shippingAddress = wrapper.getShippingAddress();
 	
 		HashSet<CartItem> cartItemList = cartItemService.findByShoppingCart(shoppingCart);
 		model.addAttribute("cartItemList", cartItemList);
